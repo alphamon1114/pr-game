@@ -1,0 +1,114 @@
+{
+  "workflowId": "4646dc1c-2408-4f66-b1d2-dabb3ace9750",
+  "recordedAt": "2026-10-06 07:06:38 UTC",
+  "nodes": [
+    {
+      "id": "96434a89-e02a-4a6d-9798-9846693910da",
+      "type": "EditImage",
+      "status": "success",
+      "outputs": [
+        {
+          "index": 0,
+          "status": "success",
+          "value": {
+            "type": "image",
+            "url": "/api/objects/b382fc9007a4ceef70b9dadeddc005e9.png"
+          },
+          "progress": null,
+          "error": null
+        }
+      ]
+    },
+    {
+      "id": "87946210-ce3c-44ce-9a28-2ad04c863fbb",
+      "type": "Generate3D",
+      "status": "failure",
+      "outputs": [
+        {
+          "index": 0,
+          "status": "failure",
+          "value": null,
+          "progress": null,
+          "error": "Task 84a8e551-437b-43e4-8e8c-d674c8d143d8 failed"
+        }
+      ]
+    },
+    {
+      "id": "0cc087b1-1bed-42f5-affc-894aef22d46b",
+      "type": "EditImage",
+      "status": "success",
+      "outputs": [
+        {
+          "index": 0,
+          "status": "success",
+          "value": {
+            "type": "image",
+            "url": "/api/objects/b7bc380bca7fedf2a825d25172382270.png"
+          },
+          "progress": null,
+          "error": null
+        }
+      ]
+    },
+    {
+      "id": "ec02044a-2dcb-4919-9021-3c3884ca9498",
+      "type": "Generate3D",
+      "status": "failure",
+      "outputs": [
+        {
+          "index": 0,
+          "status": "failure",
+          "value": null,
+          "progress": null,
+          "error": "Task 65669d9c-2aac-4a96-adba-fc25b3c15e20 failed"
+        }
+      ]
+    },
+    {
+      "id": "c91f3761-721c-4939-912a-e26ac502d3a5",
+      "type": "EditImage",
+      "status": "success",
+      "outputs": [
+        {
+          "index": 0,
+          "status": "success",
+          "value": {
+            "type": "image",
+            "url": "/api/objects/83995a3508c926bd00fd2e9a3a5b792f.png"
+          },
+          "progress": null,
+          "error": null
+        }
+      ]
+    },
+    {
+      "id": "98f3011b-7593-406b-959f-9d27557cac16",
+      "type": "Generate3D",
+      "status": "failure",
+      "outputs": [
+        {
+          "index": 0,
+          "status": "failure",
+          "value": null,
+          "progress": null,
+          "error": "Task c1f305e2-8c96-41d4-b0c5-b84094325db5 failed"
+        }
+      ]
+    },
+    {
+      "id": "4921801f-ad70-41e2-8498-5ca3a45ef456",
+      "type": "Generate3D",
+      "status": "failure",
+      "outputs": [
+        {
+          "index": 0,
+          "status": "failure",
+          "value": null,
+          "progress": null,
+          "error": "Task 1fdd1a46-6115-4ff2-b113-9550bcf0d484 failed"
+        }
+      ]
+    }
+  ],
+  "note": "Three reference images succeeded. All three textured/PBR generations and the one mesh-only monitor retry failed. No 3D model output. Do not spend more credits until the failure cause has been resolved."
+}
