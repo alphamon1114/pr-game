@@ -16,40 +16,23 @@ namespace PrGame
             var root = GetComponent<UIDocument>().rootVisualElement;
             root.Clear();
             root.style.flexGrow = 1;
-            root.style.alignItems = Align.Center;
-            root.style.justifyContent = Justify.Center;
-            root.style.backgroundColor = ColorOf("#20242D");
+            root.style.backgroundColor = ColorOf("#172F3B");
 
-            var desk = Box(root, "#775A48");
-            desk.style.position = Position.Absolute;
-            desk.style.bottom = 0;
-            desk.style.width = Length.Percent(100);
-            desk.style.height = Length.Percent(24);
-
-            var monitor = Box(root, "#101319");
-            monitor.name = "Monitor";
-            monitor.style.width = Length.Percent(82);
-            monitor.style.height = Length.Percent(72);
-            monitor.style.paddingLeft = monitor.style.paddingRight = 16;
-            monitor.style.paddingTop = 16;
-            monitor.style.paddingBottom = 25;
-            monitor.style.borderTopLeftRadius = monitor.style.borderTopRightRadius = 18;
-            monitor.style.borderBottomLeftRadius = monitor.style.borderBottomRightRadius = 18;
-
-            desktop = Box(monitor, "#243D51");
+            desktop = Box(root, "#172F3B");
             desktop.name = "Desktop";
             desktop.style.flexGrow = 1;
-            desktop.style.paddingLeft = desktop.style.paddingRight = 24;
-            desktop.style.paddingTop = 18;
+            desktop.style.paddingLeft = desktop.style.paddingRight = 56;
+            desktop.style.paddingTop = 42;
             desktop.style.overflow = Overflow.Hidden;
-            var title = Text(desktop, "PERSONAL DESKTOP", 24);
+            Text(desktop, "PR OS    /    LOCAL SESSION", 17);
+            var title = Text(desktop, "Personal space.", 60);
             title.style.unityFontStyleAndWeight = FontStyle.Bold;
-            Text(desktop, "Open a folder. Take a look around.", 14);
+            Text(desktop, "Music, games, and things I make.", 22);
 
             var folders = new VisualElement();
             folders.style.flexDirection = FlexDirection.Row;
             folders.style.flexWrap = Wrap.Wrap;
-            folders.style.marginTop = 22;
+            folders.style.marginTop = 52;
             desktop.Add(folders);
             Folder(folders, "About me", "ABOUT ME", "Your profile will live here.\n\nName, nickname and a short introduction can be added later.");
             Folder(folders, "Music", "MUSIC", "DRAGON PONY\nNOTD\nOWL CITY\n\nFavorite tracks and personal notes will be added here.");
@@ -59,10 +42,10 @@ namespace PrGame
             var taskbar = Box(desktop, "#172938");
             taskbar.style.position = Position.Absolute;
             taskbar.style.bottom = taskbar.style.left = taskbar.style.right = 0;
-            taskbar.style.height = 36;
+            taskbar.style.height = 44;
             taskbar.style.justifyContent = Justify.Center;
             taskbar.style.paddingLeft = 18;
-            Text(taskbar, "PR OS  /  Desktop", 13);
+            Text(taskbar, "DESKTOP    /    4 FOLDERS                                      OFFLINE", 16);
 
             window = Box(desktop, "#EDF0F3");
             window.name = "FileWindow";
@@ -76,7 +59,7 @@ namespace PrGame
             var bar = new VisualElement();
             bar.style.flexDirection = FlexDirection.Row;
             window.Add(bar);
-            heading = Text(bar, "", 20);
+            heading = Text(bar, "", 26);
             heading.style.color = ColorOf("#20364A");
             heading.style.flexGrow = 1;
             var close = new Button(() => window.style.display = DisplayStyle.None) { text = "Close" };
@@ -86,34 +69,24 @@ namespace PrGame
             scroll.style.flexGrow = 1;
             scroll.style.marginTop = 16;
             window.Add(scroll);
-            body = Text(scroll, "", 18);
+            body = Text(scroll, "", 25);
             body.style.color = ColorOf("#20364A");
             body.style.whiteSpace = WhiteSpace.Normal;
             window.style.display = DisplayStyle.None;
 
-            var stand = Box(root, "#141820");
-            stand.style.width = 90;
-            stand.style.height = 28;
-            var foot = Box(root, "#101319");
-            foot.style.width = 220;
-            foot.style.height = 12;
-            var keyboard = Box(root, "#303540");
-            keyboard.style.width = Length.Percent(34);
-            keyboard.style.height = 30;
-            keyboard.style.marginTop = 15;
-            keyboard.style.alignItems = Align.Center;
-            Text(keyboard, "[  ][  ][  ][  ][  ][  ][  ][  ][  ][  ]", 14);
         }
 
         private void Folder(VisualElement parent, string label, string title, string content)
         {
             var button = new Button(() => OpenFile(title, content)) { text = "+  " + label };
             button.name = label.Replace(" ", "");
-            button.style.width = 145;
-            button.style.height = 62;
-            button.style.marginRight = 12;
+            button.style.width = 245;
+            button.style.height = 100;
+            button.style.marginRight = 18;
             button.style.marginBottom = 12;
-            button.style.fontSize = 17;
+            button.style.fontSize = 25;
+            button.style.backgroundColor = ColorOf("#E3BB80");
+            button.style.color = ColorOf("#253840");
             parent.Add(button);
         }
 

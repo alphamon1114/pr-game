@@ -1,0 +1,20 @@
+[
+  {
+    "key": "monitor",
+    "file": "zowie-xl2540x-plus.png",
+    "prompt": "Create a clean 3D reconstruction reference of the same BenQ ZOWIE XL2540X+ style gaming monitor shown in this reference. Keep its matte black rectangular 16:9 landscape screen, realistic slim frame, central height-adjustable column, small flat polygonal base and subtle red ring at the bottom of the column. View from nearly front, just 12 degrees to the side and slightly above, so the front display is fully visible and nearly rectangular. Blank completely flat dark screen. Remove side shielding hoods, remove the separate round controller, no cables. One single assembled monitor only. Exact realistic product proportions. Neutral white studio background, soft uniform lighting, no strong shadows, no environment, no text overlay. Full object uncropped with small margin. Not a laptop, no curved screen.",
+    "polygons": 16000
+  },
+  {
+    "key": "keyboard",
+    "file": "archon-m3-600-mini-black.jpg",
+    "prompt": "Create a photorealistic 3D reconstruction reference of exactly this black archon M3 600 MINI compact keyboard. Preserve its exact compact rectangular 65 percent layout with five key rows, no function key row, no number pad, arrow keys and narrow right-hand navigation column, long spacebar, all black keycaps and matte black case. Preserve the white key legends and narrow indicator strip near the arrows. Change camera from top down to a shallow elevated front three-quarter product view, approximately 55 degrees above the table and 12 degrees from centered front, showing the key tops and case depth. Single complete keyboard only, no cable, no wrist rest, no other objects. Thin realistic case, distinct individual sculpted keycaps. Neutral white studio background, uniform soft lighting, no dramatic reflections, no text overlay. Entire keyboard uncropped and centered.",
+    "polygons": 24000
+  },
+  {
+    "key": "mouse",
+    "file": "atk-phantom-blue.jpg",
+    "prompt": "Create a clean photorealistic 3D reconstruction reference of exactly this ATK Phantom Verge Blue wireless gaming mouse. Preserve the rich metallic cyan-blue shell, distinctive angular hexagonal open lattice cutouts at the rear and sides, solid separated main click panels with angular embossed line graphics, black rubber scroll wheel, two left thumb buttons, narrow waist and low symmetrical curved hump. Keep real mouse proportions, approximately 120 by 62.5 by 37 mm. Change the view to front-left three-quarter, 45 degrees above, so top, left side and curved rear are visible. Only the mouse, no cable or dongle, no stand or base. Neutral white studio background, even soft lighting, no graphic captions. Full object centered with small margin. Hollow parts must remain hollow, not painted holes.",
+    "polygons": 20000
+  }
+]

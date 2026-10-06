@@ -11,4 +11,7 @@
 *.wav binary
 *.mp3 binary
 *.ttf binary
-
+*.fbx binary
+*.glb binary
+*.zip binary
+*.renderTexture text eol=lf
