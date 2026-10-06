@@ -16,8 +16,10 @@
 *.pidb
 *.log
 *.tmp
+*.blend1
+*.blend2
+__pycache__/
 .DS_Store
 .env
 .env.*
 !.env.example
-

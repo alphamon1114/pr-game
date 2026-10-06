@@ -1,0 +1,35 @@
+{
+  "workflowId": "4646dc1c-2408-4f66-b1d2-dabb3ace9750",
+  "intent": "User rejected simplistic handcrafted replacements. Use VARCO 3D for maximum product shape fidelity; modest polygon density is acceptable.",
+  "mouse": {
+    "sourceUrl": "https://cdn.shopify.com/s/files/1/0691/4942/5882/files/3_17e09a45-2687-4a00-994b-46a32d155936.jpg?v=1788945742",
+    "uploadedUrl": "https://3d.varco.ai/api/objects/b6e0dc7d77b5f19c65b4dccdf32be2a1.jpg",
+    "inputNode": "1386c7ea-fefe-42a4-838d-614c79c1133a",
+    "failedPbrNode": "dd79e919-a41f-4dc0-9eb4-15cf21509915",
+    "currentNode": "c7fcaa34-58e1-44a2-bdd1-385a3a4f3d2f",
+    "checks": [
+      "Actual low curved mouse silhouette, no wheels or vehicle structures",
+      "Intersecting hexagonal rib pattern rather than simple honeycomb",
+      "Central vertical rib stack",
+      "Dragonfly linework behind wheel",
+      "No top DPI button",
+      "Two left thumb buttons"
+    ],
+    "failedBasicTextureNode": "d2d052f8-c985-4d76-94f9-c3f25f6f979b"
+  },
+  "keyboard": {
+    "sourceNode": "2724b57f-bcb0-481e-8207-0fc9c1981d4b",
+    "detailSourceUrl": "https://images002.sabangnet.co.kr/v1/AUTH_c55e59a8ec2149e7ad5e61ca73645bd9/mw70748/image/1790056533451.jpg",
+    "detailUploadedUrl": "https://3d.varco.ai/api/objects/8d355f104b048dbc6846530422c75d3a.jpg",
+    "referenceNode": "75561f1e-8d79-4f6d-bebc-edc52cdfa92d",
+    "referenceUrl": "https://3d.varco.ai/api/objects/4a01b7c62f717a20aba17fbe881b56f1.png",
+    "currentNode": "d56fa4f7-5c62-4f17-b2de-e657920fafc2",
+    "checks": [
+      "Black 67-key M3 600 MINI layout",
+      "Sculpted keycaps and row profiles",
+      "Straight frame without torn key gaps",
+      "Right navigation keys and four indicator lights"
+    ],
+    "failedPbrNode": "f32c823d-6814-4c0e-8488-42b46fd593df"
+  }
+}

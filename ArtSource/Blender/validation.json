@@ -1,0 +1,40 @@
+[
+  {
+    "model": "Mouse",
+    "meshObjects": 93,
+    "vertices": 52499,
+    "triangles": 104754,
+    "dimensionsMeters": [
+      0.06168,
+      0.1197,
+      0.03627
+    ],
+    "finiteVertices": true,
+    "shellNonManifoldEdges": 0
+  },
+  {
+    "model": "Keyboard",
+    "meshObjects": 173,
+    "vertices": 23971,
+    "triangles": 42595,
+    "dimensionsMeters": [
+      0.315,
+      0.12,
+      0.03864
+    ],
+    "finiteVertices": true,
+    "keycaps": 67
+  },
+  {
+    "model": "Monitor",
+    "meshObjects": 34,
+    "vertices": 4512,
+    "triangles": 8888,
+    "dimensionsMeters": [
+      0.574,
+      0.179,
+      0.507
+    ],
+    "finiteVertices": true
+  }
+]

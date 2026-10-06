@@ -30,4 +30,26 @@ Unity 새 프로젝트 생성, 초기 씬 생성과 스크립트 컴파일 성�
 
 VARCO 요청: BenQ ZOWIE XL2540X+, archon M3 600 MINI 블랙, ATK Phantom 블루를 참고한 모델. [제작 기록](../ArtSource/Varco/README.md)에 출처·프롬프트·노드·설정을 기록한다.
 
-VARCO 결과: 제작용 이미지 3개는 성공. 텍스처 포함 3D 3회와 모니터 형상만 생성한 재시도 1회는 모두 실패했다. 상세 원인은 반환되지 않았으며 3D 다운로드 결과가 없어 장비 교체는 미완료다. 임시 장비가 있는 `Desktop3D` 씬은 사용 가능하다. 실패 원인을 확인하기 전까지 추가 유료 생성은 자동 실행하지 않는다.
+첫 VARCO 결과: 제작용 이미지 3개는 성공. 텍스처 포함 3D 3회와 모니터 형상만 생성한 첫 재시도 1회는 모두 실패했다. 이후 사용자 요청으로 다시 실행했다.
+
+## 2026-10-06 — 장비 형태 정리
+
+두 번째 VARCO 생성은 모두 성공했으나, 사용자 검토에서 키보드의 찢어진 면과 마우스의 자동차 같은 잘못된 형상이 지적됐다. 사용자는 반듯한 외곽선과 금속 표현, 마우스의 겹치는 육각형 선 패턴, 중앙 세로 타공, 휠 뒤 잠자리 무늬, 휠 뒤 버튼 없음을 요청했다.
+
+Blender로 직접 구성한 대체 모델도 시험했지만 사용자가 너무 단순하다고 판단했다. 해당 실험은 `Builds/RejectedHardSurface`로 옮기고 실제 프로젝트 씬에는 적용하지 않았다. 사용자는 마우스와 키보드 모두 VARCO 3D를 사용하며, 조금 낮은 폴리곤 수라도 실제 제품의 형태를 최대한 닮게 만들기를 원한다.
+
+후속 입력: 마우스는 ATK 공식 Verge Blue 사선 사진을 변형 없이 직접 사용한다. 키보드는 블랙 제품의 전체 배열과 실제 키캡 확대 사진을 함께 참고한다. 생성 성공만으로 채택하지 않고 형상·패턴·불필요한 버튼 유무를 확인한다.
+
+## 2026-10-06 — Blender MCP 연결과 사진 기반 재구성
+
+이후 사용자 요청으로 Blender MCP 방식으로 전환했다. `mcp-for-blender` 2.1.8과 Blender 5.2 애드온을 설치하고, Codex에 `blender` 서버를 등록했다. localhost:9876의 실제 Blender에 MCP `get_scene_info`와 `execute_blender_code`를 호출해 모델을 만들었다. 애드온 사용 정보 전송 동의와 서버 telemetry는 껐다. 이 단계에서는 VARCO 유료 생성을 추가 실행하지 않았다.
+
+원본과 재생성 스크립트는 `ArtSource/Blender`, Unity FBX와 재질은 `Assets/Art/ReferenceProps`, 배치 프리팹은 `Assets/Prefabs/Refined*.prefab`에 있다. `Desktop3D.unity`에 반영했으며, 재배치는 Unity 메뉴 `PR Game/Apply reference desk props`를 사용한다. 이 메뉴는 현재 열린 씬 대신 저장된 Desktop3D 씬을 열어 수정하므로 먼저 편집 내용을 저장한다.
+
+- 마우스: [ATK 제품 사진](https://www.atk.store/products/atk-blazing-sky-phantom-hollow-carbon-fiber-composite-wireless-gaming-mouse)의 타공 윤곽을 바탕으로 86개 개구부를 배치했다. 평면 제약 삼각분할 후 곡면에 투영하고 두께를 부여해, 3D Boolean에서 나타난 찢어짐을 제거했다. 겹치는 육각형 형태, 중앙 세로 리브, 잠자리 선무늬, 휠과 왼쪽 버튼 2개를 구현했으며 휠 뒤 버튼은 없다.
+- 키보드: [archon M3 600 MINI 제품](https://www.preflow.co.kr/product/detail.html?product_no=10776)의 블랙 67키 배열, 한영 각인, 4개 표시등, 행별 높이와 오목한 키캡을 구성했다. 각인을 실제 키캡 표면에 투영해 가려지는 글자를 보정했다. 사용자가 요청한 금속 느낌은 케이스 가장자리의 재질 표현에 반영했다.
+- 모니터: XL2540X+ 참고 이미지의 직선 베젤, 낮은 받침대, 원통형 기둥과 빨간 포인트를 구성했다. 화면은 기존 RenderTexture와 클릭 좌표 변환을 유지한다.
+
+검증: Blender 원본의 좌표 유효성, 키캡 67개, 마우스 셸의 비다양체 경계 0개를 확인했다. 수치는 `ArtSource/Blender/validation.json`에 기록했다. 별도 Unity 프로젝트에서 컴파일, 실제 씬 렌더, 모니터 중앙 좌표, 화면 밖 입력 거부, 네 폴더 열기·닫기를 통과했다. Unity 검색 인덱스 초기화 예외는 남아 있으나 게임 검사 완료 마커와 정상 종료를 확인했다.
+
+사진을 바탕으로 재구성한 게임 소품이며 실측 CAD 복제본은 아니다. 마우스 측면의 복잡한 인쇄 그래픽과 내부 기판, 모니터 뒷면 세부 형상은 단순화했다. 고해상도 검토용으로 마우스 약 10.5만, 키보드 약 4.3만, 모니터 약 0.9만 삼각형이며 전용 저사양 LOD는 아직 없다. `ArtSource/Blender/Models`에 개별 렌더와 Unity 배치 화면을 함께 저장했다.

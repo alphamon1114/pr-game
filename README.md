@@ -25,3 +25,5 @@ Unity로 만드는 개인 소개 탐색 게임. 책상 앞에서 모니터를 �
 `Assets`와 `.meta`, `Packages`, `ProjectSettings`, 문서를 함께 커밋한다. `Library`, `Temp`, `Logs`, 빌드 결과물과 개인 설정은 제외한다. 외부 음악, 상업 게임 이미지 및 다른 프로젝트의 원본 에셋은 포함하지 않았다.
 
 기획 및 다음 작업은 [Docs/DEVELOPMENT.md](Docs/DEVELOPMENT.md)에 기록한다.
+
+모니터·블랙 키보드·블루 타공 마우스는 Blender MCP로 제작해 3D 씬에 배치했다. 수정 가능한 원본과 제작 스크립트는 [ArtSource/Blender](ArtSource/Blender), Unity용 모델과 재질은 [Assets/Art/ReferenceProps](Assets/Art/ReferenceProps)에 있다. [현재 책상 화면](ArtSource/Blender/Models/unity-desk.png)에서 배치를 확인할 수 있다.

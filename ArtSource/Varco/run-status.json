@@ -1,6 +1,6 @@
 {
   "workflowId": "4646dc1c-2408-4f66-b1d2-dabb3ace9750",
-  "recordedAt": "2026-10-06 07:06:38 UTC",
+  "recordedAt": "2026-10-06T07:43:48.565Z",
   "nodes": [
     {
       "id": "96434a89-e02a-4a6d-9798-9846693910da",
@@ -108,7 +108,75 @@
           "error": "Task 1fdd1a46-6115-4ff2-b113-9550bcf0d484 failed"
         }
       ]
+    },
+    {
+      "id": "4df2b5df-a6ac-4f39-90a6-18e98845b9f0",
+      "type": "Generate3D",
+      "status": "success",
+      "outputs": [
+        {
+          "index": 0,
+          "status": "success",
+          "value": {
+            "type": "3d",
+            "taskId": "54cd3363-f35a-4d81-bac5-e9d956d2754d"
+          },
+          "progress": null,
+          "error": null
+        }
+      ]
+    },
+    {
+      "id": "7fec16a7-899a-49c1-80d6-6733d12caa9d",
+      "type": "Generate3D",
+      "status": "success",
+      "outputs": [
+        {
+          "index": 0,
+          "status": "success",
+          "value": {
+            "type": "3d",
+            "taskId": "fd6052b9-319c-4b3d-bb6a-4c3760a28ced"
+          },
+          "progress": null,
+          "error": null
+        }
+      ]
+    },
+    {
+      "id": "2bb2db04-d05c-4d99-9333-61d9413f3762",
+      "type": "Generate3D",
+      "status": "success",
+      "outputs": [
+        {
+          "index": 0,
+          "status": "success",
+          "value": {
+            "type": "3d",
+            "taskId": "df0330ae-80aa-4f34-ab6b-ae09b5f1a9c4"
+          },
+          "progress": null,
+          "error": null
+        }
+      ]
+    },
+    {
+      "id": "a46fbdd7-a055-4fa4-812e-51d3ac490ed9",
+      "type": "Texture3D",
+      "status": "success",
+      "outputs": [
+        {
+          "index": 0,
+          "status": "success",
+          "value": {
+            "type": "3d",
+            "taskId": "8d977e3f-342b-4e2b-b698-a770cbeba03a"
+          },
+          "progress": null,
+          "error": null
+        }
+      ]
     }
   ],
-  "note": "Three reference images succeeded. All three textured/PBR generations and the one mesh-only monitor retry failed. No 3D model output. Do not spend more credits until the failure cause has been resolved."
+  "note": "Four retry actions succeeded, but visual inspection rejected the keyboard distortion and vehicle-like mouse geometry. The manually constructed replacements were also rejected as too simplified and archived under Builds/RejectedHardSurface, without changing the production scene. User explicitly requests VARCO 3D fidelity for both keyboard and mouse. A fresh actual angled mouse photograph and improved keyboard reference are now being generated in VARCO; this snapshot will be refreshed after those runs finish."
 }
