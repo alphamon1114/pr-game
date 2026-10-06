@@ -12,8 +12,43 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Blue aperture walls.001
+    second: {fileID: 2100000, guid: 2bbd32bdb6a3fe941b77cd226045d15e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Blue aperture walls.004
+    second: {fileID: 2100000, guid: 86d29dc800ac909408a9d627a8b0d6bf, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Blue aperture walls.005
+    second: {fileID: 2100000, guid: a6cfd9386167e0f468422fa44e1b97c7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Internal chassis.001
+    second: {fileID: 2100000, guid: 9454b4ed71c7ed84f8af9c01129cb218, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Internal chassis.003
     second: {fileID: 2100000, guid: 5b19a6e2b336a1d46b82d866fd4679b6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Internal chassis.004
+    second: {fileID: 2100000, guid: d7658bbf13571c34481a68bbec37b5b9, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Internal chassis.006
+    second: {fileID: 2100000, guid: cb8970749ed4794448834a35c26582e3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Recessed blue engraving.001
+    second: {fileID: 2100000, guid: 78cd602243b48e94d89c495e0d4650f0, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -22,13 +57,53 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Recessed blue engraving.004
+    second: {fileID: 2100000, guid: f97bb6c78439f4d4cbeae95ef037a499, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Recessed blue engraving.006
+    second: {fileID: 2100000, guid: d1900818de3866341902f936daed754e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Satin metallic blue.001
+    second: {fileID: 2100000, guid: 6d2a7b112dfc0b4498598cf177af3f5e, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Satin metallic blue.003
     second: {fileID: 2100000, guid: cdfa0f0786c95ac4eaeb8c1a8d80bb79, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Satin metallic blue.004
+    second: {fileID: 2100000, guid: 73977d774fbbd0b42ba3e4539265c3f7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Satin metallic blue.006
+    second: {fileID: 2100000, guid: 5334e7478be46694ea86edad8970c2d8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Scroll rubber.001
+    second: {fileID: 2100000, guid: a3e3acdb47cc8eb4ba211b506fe30ff0, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Scroll rubber.003
     second: {fileID: 2100000, guid: 324cbb6964ad55e409b82da8b9fa886c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Scroll rubber.004
+    second: {fileID: 2100000, guid: 59be954609600e148bb2d6b59cac4df7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Scroll rubber.006
+    second: {fileID: 2100000, guid: 079f05682c0764344a7c577f38f0be8d, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0

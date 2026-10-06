@@ -7,8 +7,18 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Black anodized aluminum
+    second: {fileID: 2100000, guid: 334cbe139fa7eb74e92d8a8288bf4b1d, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Black anodized aluminum.002
     second: {fileID: 2100000, guid: 1ba1dd9e0b50b48459232013d6d1382c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Indicator diffuser
+    second: {fileID: 2100000, guid: 6360f87bc53c04143a7906526326c787, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -17,8 +27,18 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Machined graphite edge
+    second: {fileID: 2100000, guid: 6dcda864cbec1584b82a5c82fef5285b, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Machined graphite edge.002
     second: {fileID: 2100000, guid: 33c4da990c758274887e7859bb16482c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Matte black PBT
+    second: {fileID: 2100000, guid: 5be9429806503d040a41a0686cae1d89, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -27,8 +47,18 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Recess and underside
+    second: {fileID: 2100000, guid: 98ed883776ec7b94492803edbeb94c75, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Recess and underside.002
     second: {fileID: 2100000, guid: 24d4c2ad9d6efd842b502273b8846436, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Warm white legends
+    second: {fileID: 2100000, guid: 834e595ec30710144b4cbe49d0b0fd85, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule

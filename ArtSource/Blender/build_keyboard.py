@@ -111,30 +111,35 @@ def key(label,start,u,row):
         dish=.00065*(1-(yy/(td/2))**2)
         if label=='Space':dish=-.00045*(1-(yy/(td/2))**2)
         return z+h+tilt*yy-dish
-    rings=[loop(width,depth,.0009,z),loop(width,depth,.0009,z+.001),loop(tw,td,.0011,z+h)]
-    # Several concentric rings follow the cylindrical concavity without a flat cap.
-    for f in [.82,.60,.36,.12]:rings.append(loop(tw*f,td*f,.0011*f,z+h))
-    vs=[]
-    for k,ring in enumerate(rings):
-        for xx,yy,zz in ring:vs.append((xx,yy,topz(xx,yy) if k>=2 else zz))
-    n=len(rings[0]);fs=[tuple(reversed(range(n)))]
-    for k in range(len(rings)-1):
-        for i in range(n):fs.append((k*n+i,k*n+(i+1)%n,(k+1)*n+(i+1)%n,(k+1)*n+i))
-    fs.append(tuple(range((len(rings)-1)*n,len(rings)*n)))
+    # Regular surface grid: long side edges also sample the cylindrical dish.
+    # Concentric rectangular rings alone caused the former star-shaped dent.
+    nx=max(28,int(u*24));ny=40;radius=.0010;vs=[];fs=[]
+    for j in range(ny+1):
+        yy=-td/2+td*j/ny
+        dy=max(0,abs(yy)-(td/2-radius))
+        half=tw/2-radius+math.sqrt(max(0,radius*radius-dy*dy))
+        for i in range(nx+1):
+            xx=(-1+2*i/nx)*half;vs.append((xx,yy,topz(xx,yy)))
+    for j in range(ny):
+        for i in range(nx):
+            k=j*(nx+1)+i;fs.append((k,k+1,k+nx+2,k+nx+1))
+    boundary=list(range(nx+1))+[j*(nx+1)+nx for j in range(1,ny+1)]+[ny*(nx+1)+i for i in range(nx-1,-1,-1)]+[j*(nx+1) for j in range(ny-1,0,-1)]
+    previous=boundary
+    for fraction,dz in [(.03,-.0002),(.15,-.0006),(1,None)]:
+        current=[]
+        for idx in boundary:
+            xx,yy,zz=vs[idx]
+            current.append(len(vs))
+            vs.append((xx*(1+fraction*(width/tw-1)),yy*(1+fraction*(depth/td-1)),z if dz is None else zz+dz))
+        for k in range(len(boundary)):
+            n=(k+1)%len(boundary);fs.append((previous[k],current[k],current[n],previous[n]))
+        previous=current
+    fs.append(tuple(reversed(previous)))
     mesh=bpy.data.meshes.new('Sculpted keycap '+label);mesh.from_pydata(vs,[],fs);mesh.update()
     o=bpy.data.objects.new('Keycap '+label,mesh);bpy.context.collection.objects.link(o);o.location=(x,y,0)
-    finish(o,plastic,.00024)
-    # Analytic cylindrical normals keep the dish smooth across triangulated rings.
-    # Weighted face normals on a concave cap create a false star-shaped depression.
-    normals=[]
-    for poly in o.data.polygons:
-        for li in poly.loop_indices:
-            v=o.data.vertices[o.data.loops[li].vertex_index].co
-            if v.z>z+h-.0022:
-                slope=tilt+(.00130 if label!='Space' else -.0009)*v.y/(td/2)**2
-                normals.append(tuple(Vector((0,-slope,1)).normalized()))
-            else:normals.append(tuple(poly.normal))
-    o.data.normals_split_custom_set(normals)
+    o.data.materials.append(plastic);parts.append(o)
+    for face in o.data.polygons:face.use_smooth=True
+    o.data.set_sharp_from_angle(angle=1.1)
     first=len(parts)
     if len(label)==1 and label in hangul:
         legend(label,x-.003,y+.0025,z+h,.0034)
@@ -174,7 +179,7 @@ bpy.ops.export_scene.fbx(filepath=os.path.join(OUT,'Keyboard_Clean.fbx'),use_sel
 bpy.ops.wm.save_as_mainfile(filepath=os.path.join(PREVIEW,'Keyboard_Clean.blend'))
 
 # Broad studio reflection cards reveal the straight edges and metal/PBT contrast.
-scene=bpy.context.scene;scene.render.engine='CYCLES';scene.cycles.samples=32
+scene=bpy.context.scene;scene.render.engine='CYCLES';scene.cycles.samples=64
 scene.cycles.use_denoising=True
 scene.world.color=(.10,.10,.10)
 ground=material('Studio floor',(.024,.031,.044),.15,.48)
