@@ -1,0 +1,25 @@
+{
+  "workflowId": "4646dc1c-2408-4f66-b1d2-dabb3ace9750",
+  "executionId": "835be160-daf5-46b2-aa61-c4d091982c5e",
+  "status": "generated_successfully_rejected_for_visual_quality",
+  "priority": "Visible front and top surfaces, smooth manufactured finish; underside is low priority. Preserve curved mouse silhouette, intersecting hexagonal ribs, dragonfly lines, no button behind wheel; straight keyboard frame and sculpted keycaps.",
+  "settings": {
+    "polygonCount": 80000,
+    "topology": "tri",
+    "textureSize": 2048,
+    "usePbrTexture": true
+  },
+  "estimatedCredits": 400,
+  "mouse": {
+    "nodeId": "f4a8f0d9-5187-4ede-ad1b-992da85c80a6",
+    "sourceNodeId": "1386c7ea-fefe-42a4-838d-614c79c1133a",
+    "taskId": "5026291f-f4db-4002-9d77-19973c588615"
+  },
+  "keyboard": {
+    "nodeId": "b32a1385-0c36-468c-8241-ebc1ad1813b6",
+    "sourceNodeId": "75561f1e-8d79-4f6d-bebc-edc52cdfa92d",
+    "taskId": "ea73c359-c527-461b-b989-49eced21ee59"
+  },
+  "integration": "Existing Blender models retained until visual review of actual generated meshes.",
+  "review": "Dirty textures, distorted mouse ribs and uneven keycaps. User requested solid colors and allowed removal of keyboard legends. Texture-free GLB copies exported for review; geometry unchanged."
+}
