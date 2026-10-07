@@ -69,13 +69,24 @@ namespace PrGame.Editor
                 foreach(var src in AssetDatabase.LoadAllAssetsAtPath(path).OfType<Material>())
                 {
                     string name=src.name;
-                    string dest=Root+"/Materials/"+name.Replace('/','_')+".mat";
+                    string dest=Root+"/Materials/"+(name.StartsWith("RGB wave diffuser") ? "Keyboard RGB Wave" : name.Replace('/','_'))+".mat";
                     var m=AssetDatabase.LoadAssetAtPath<Material>(dest);
                     if(!m){m=new Material(Shader.Find("Standard"));AssetDatabase.CreateAsset(m,dest);}
-                    m.name=name;
+                    m.name=name.StartsWith("RGB wave diffuser") ? "Keyboard RGB Wave" : name;
+                    if(name.StartsWith("RGB wave diffuser"))
+                    {
+                        var wave=Shader.Find("PRGame/Keyboard RGB Wave");
+                        if(!wave)throw new Exception("Missing keyboard RGB wave shader");
+                        m.shader=wave;
+                        m.SetFloat("_Intensity",1.6f);m.SetFloat("_Speed",.12f);
+                        m.SetFloat("_Frequency",1.35f);m.SetFloat("_Saturation",.9f);
+                        importer.AddRemap(new AssetImporter.SourceAssetIdentifier(typeof(Material),name),m);
+                        EditorUtility.SetDirty(m);
+                        continue;
+                    }
                     Color c=new Color(.035f,.04f,.05f);float metal=.1f,smooth=.4f;
                     if(name.Contains("aluminum")){c=new Color(.10f,.115f,.13f);metal=.48f;smooth=.58f;}
-                    else if(name.Contains("Machined")){c=new Color(.12f,.13f,.15f);metal=.55f;smooth=.60f;}
+                    else if(name.Contains("Machined")){c=new Color(.08f,.09f,.105f);metal=.38f;smooth=.45f;}
                     else if(name.Contains("PBT")){c=new Color(.07f,.077f,.09f);smooth=.35f;metal=0;}
                     else if(name.Contains("legends")){c=new Color(.76f,.77f,.79f);smooth=.2f;metal=0;}
                     else if(name.Contains("diffuser")){c=new Color(.55f,.74f,.78f);smooth=.35f;}

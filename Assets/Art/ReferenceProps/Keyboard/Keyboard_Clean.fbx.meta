@@ -47,6 +47,341 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 0 0
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 0 1
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 0 10
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 0 11
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 0 12
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 0 13
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 0 15
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 0 2
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 0 3
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 0 4
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 0 5
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 0 6
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 0 7
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 0 8
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 0 9
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 1 0
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 1 1.5
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 1 10.5
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 1 11.5
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 1 12.5
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 1 13.5
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 1 15.0
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 1 2.5
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 1 3.5
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 1 4.5
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 1 5.5
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 1 6.5
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 1 7.5
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 1 8.5
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 1 9.5
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 2 0
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 2 1.75
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 2 10.75
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 2 11.75
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 2 12.75
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 2 15.0
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 2 2.75
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 2 3.75
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 2 4.75
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 2 5.75
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 2 6.75
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 2 7.75
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 2 8.75
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 2 9.75
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 3 0
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 3 10.25
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 3 11.25
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 3 12.25
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 3 14.0
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 3 15.0
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 3 2.25
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 3 3.25
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 3 4.25
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 3 5.25
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 3 6.25
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 3 7.25
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 3 8.25
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 3 9.25
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 4 0
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 4 1.25
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 4 10.0
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 4 11.25
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 4 13.0
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 4 14.0
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 4 15.0
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 4 2.5
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: RGB wave diffuser 4 3.75
+    second: {fileID: 2100000, guid: 8b9d2ef68b6d7e4419d849b8b2e0c721, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Recess and underside
     second: {fileID: 2100000, guid: 98ed883776ec7b94492803edbeb94c75, type: 2}
   - first:

@@ -1,8 +1,8 @@
 """Build a clean 67-key black keyboard inspired by the archon M3 600 MINI.
 Run with Blender --background --python this_file.py. No generated mesh is reused.
-The geometry, labels and neutral PBR materials are exported together as FBX.
+Blank keycaps and separate RGB diffusers are exported together as FBX.
 """
-import bpy, math, os
+import bpy, math, os, colorsys
 from mathutils import Vector
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
@@ -23,7 +23,7 @@ def material(name, color, metal=0, rough=.4):
     return m
 
 metal = material('Black anodized aluminum', (.022,.026,.033), .48,.31)
-edge = material('Machined graphite edge', (.085,.097,.116), .92,.23)
+edge = material('Machined graphite edge', (.018,.021,.027), .38,.38)
 plastic = material('Matte black PBT', (.013,.016,.021), 0,.40)
 well = material('Recess and underside', (.007,.009,.013), .05,.55)
 white = material('Warm white legends', (.68,.70,.72), 0,.6)
@@ -78,7 +78,7 @@ def frame():
     obj.data.materials.append(edge)
     # Top perimeter has a restrained bright machined edge.
     for p in obj.data.polygons:
-        if p.center.z > .0221:p.material_index=1
+        if .027 < p.center.z < .02765:p.material_index=1
 
 frame()
 box('Bottom shell',(0,0,.006),(.313,.118,.010),metal,.002)
@@ -88,19 +88,8 @@ for x in [-.128,.128]:
 box('USB-C port recess',(-.107,.0557,.012),(.009,.001,.0032),well,.0007)
 box('USB-C inner tongue',(-.107,.0562,.012),(.0058,.0005,.0008),edge,.0001)
 
-font=bpy.data.fonts.load('C:/Windows/Fonts/consola.ttf')
-kfont=bpy.data.fonts.load('C:/Windows/Fonts/malgun.ttf')
 pitch=.0187
-def legend(text,x,y,z,size=.00265,korean=False):
-    c=bpy.data.curves.new('Legend '+text,'FONT');c.body=text
-    c.font=kfont if korean else font;c.align_x='CENTER';c.align_y='CENTER'
-    c.size=size;c.resolution_u=2;c.extrude=0
-    o=bpy.data.objects.new('Legend '+text,c);bpy.context.collection.objects.link(o)
-    o.location=(x,y,z);o.data.materials.append(white)
-    bpy.context.view_layer.objects.active=o;o.select_set(True)
-    bpy.ops.object.convert(target='MESH');o.select_set(False);parts.append(o)
 
-hangul=dict(zip(list('QWERTYUIOPASDFGHJKLZXCVBNM'),list('ㅂㅈㄷㄱㅅㅛㅕㅑㅐㅔㅁㄴㅇㄹㅎㅗㅓㅏㅣㅋㅌㅊㅍㅠㅜㅡ')))
 def key(label,start,u,row):
     x=(start+u/2-8)*pitch;y=(2-row)*pitch
     width=u*pitch-.0014;depth=pitch-.0014
@@ -113,7 +102,7 @@ def key(label,start,u,row):
         return z+h+tilt*yy-dish
     # Regular surface grid: long side edges also sample the cylindrical dish.
     # Concentric rectangular rings alone caused the former star-shaped dent.
-    nx=max(28,int(u*24));ny=40;radius=.0010;vs=[];fs=[]
+    nx=max(8,int(u*6));ny=12;radius=.0012;vs=[];fs=[]
     for j in range(ny+1):
         yy=-td/2+td*j/ny
         dy=max(0,abs(yy)-(td/2-radius))
@@ -140,18 +129,14 @@ def key(label,start,u,row):
     o.data.materials.append(plastic);parts.append(o)
     for face in o.data.polygons:face.use_smooth=True
     o.data.set_sharp_from_angle(angle=1.1)
-    first=len(parts)
-    if len(label)==1 and label in hangul:
-        legend(label,x-.003,y+.0025,z+h,.0034)
-        legend(hangul[label],x+.003,y-.003,z+h,.0024,True)
-    elif label=='Space':
-        box('Spacebar legend',(x,y+.003,z+h),(.010,.00030,.000025),white,.000025)
-    else:legend(label,x,y+.0015,z+h,.0021 if len(label)>2 else .0028)
-    for text in parts[first:]:
-        for v in text.data.vertices:
-            wx=text.location.x+v.co.x;wy=text.location.y+v.co.y
-            hit,point,normal,index=o.ray_cast(Vector((wx-x,wy-y,.1)),Vector((0,0,-1)))
-            v.co.z=(point.z if hit else topz(wx-x,wy-y))+.000035-text.location.z
+    # Discrete diffusers sit below opaque, unmarked caps. Their Unity material
+    # is replaced by the time-driven RGB shader; studio renders show one phase.
+    rgb=colorsys.hsv_to_rgb((start/16+.08)%1,.9,1)
+    glow=material('RGB wave diffuser '+str(row)+' '+str(start),rgb,0,.4)
+    gp=glow.node_tree.nodes.get('Principled BSDF')
+    gp.inputs['Emission Color'].default_value=(*rgb,1)
+    gp.inputs['Emission Strength'].default_value=2
+    box('RGB underkey '+str(row)+' '+str(start),(x,y,z-.0005),(width+.0005,depth+.0005,.0014),glow,.0004)
 
 
 rows=[

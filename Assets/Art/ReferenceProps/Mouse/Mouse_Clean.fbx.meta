@@ -27,6 +27,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Internal chassis
+    second: {fileID: 2100000, guid: 66306d72535fc534aaf7168bc4d76b8a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Internal chassis.001
     second: {fileID: 2100000, guid: 9454b4ed71c7ed84f8af9c01129cb218, type: 2}
   - first:
@@ -44,6 +49,11 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: Internal chassis.006
     second: {fileID: 2100000, guid: cb8970749ed4794448834a35c26582e3, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Recessed blue engraving
+    second: {fileID: 2100000, guid: 90ab1802c651bc14db8734e9458b7024, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -67,6 +77,11 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Satin metallic blue
+    second: {fileID: 2100000, guid: 90abdc52fc43f0146a0857ca73397403, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Satin metallic blue.001
     second: {fileID: 2100000, guid: 6d2a7b112dfc0b4498598cf177af3f5e, type: 2}
   - first:
@@ -84,6 +99,11 @@ ModelImporter:
       assembly: UnityEngine.CoreModule
       name: Satin metallic blue.006
     second: {fileID: 2100000, guid: 5334e7478be46694ea86edad8970c2d8, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Scroll rubber
+    second: {fileID: 2100000, guid: 6dbc8fa67c96a1e47bf082285d2872f7, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule

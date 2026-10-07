@@ -49,7 +49,7 @@ vs=[(*photo(x,y),0) for x,y in surface['vertices']]
 shell=mesh('Continuous curved blue shell',vs,surface['faces'],blue)
 bm=bmesh.new();bm.from_mesh(shell.data)
 for iteration in range(6):
- edges=[e for e in bm.edges if e.calc_length()>.0010]
+ edges=[e for e in bm.edges if e.calc_length()>.0020]
  if not edges:break
  bmesh.ops.subdivide_edges(bm,edges=edges,cuts=1,use_grid_fill=True)
 bmesh.ops.triangulate(bm,faces=list(bm.faces))
@@ -101,13 +101,13 @@ for i in range(n):faces.append((i,(i+1)%n,(i+1)%n+n,i+n))
 base=mesh('Low enclosed underside',verts,faces,dark);bevel(base,.00035)
 # No top DPI button. Only a transverse scroll wheel and two left thumb buttons.
 # Dense rounded rubber barrel with geometric knurling instead of box-shaped ribs.
-vs=[];fs=[];around=256;across=48
+vs=[];fs=[];around=128;across=16
 for i in range(across+1):
  x=-.00375+.0075*i/across
  edge=min(1,max(0,(.00375-abs(x))/.00045))
  for j in range(around):
   a=2*math.pi*j/around
-  grip=.00017*max(0,math.cos(a*64))*max(0,math.cos(2*math.pi*i/4))
+  grip=.00017*max(0,math.cos(a*32))*max(0,math.cos(2*math.pi*i/4))
   r=.00885+.00035*math.sin(edge*math.pi/2)+grip
   vs.append((x,.0358+r*math.sin(a),.0272+r*math.cos(a)))
 for i in range(across):
@@ -119,15 +119,16 @@ wheel=mesh('Single rubber scroll wheel',vs,fs,rubber)
 for f in wheel.data.polygons:f.use_smooth=len(f.vertices)==4
 wheel.data.set_sharp_from_angle(angle=.6)
 for y in [.001,.016]:
- o=box('Left thumb button',(-.0287,y,.013),(.0023,.0135,.0040),blue)
+ # Flush into the side wall; long bevelled surfaces instead of protruding blocks.
+ o=box('Left thumb button',(-radius(y)*.945,y,.016),(.0020,.0135,.0040),blue)
 
 # Fine blue-on-blue panel lines, deliberately restrained rather than painted fake holes.
 def line(name,points):
  # Dense surface projection prevents straight segments floating above the curved shell.
  samples=[]
  for a,b in zip(points,points[1:]):
-  for i in range(64):
-   t=i/64;y=a[1]*(1-t)+b[1]*t
+  for i in range(12):
+   t=i/12;y=a[1]*(1-t)+b[1]*t
    x=a[0]*(1-t)+b[0]*t;x=max(-radius(y)*.94,min(radius(y)*.94,x))
    samples.append((x,y))
  c=bpy.data.curves.new(name,'CURVE');c.dimensions='3D';c.bevel_depth=.000075;c.bevel_resolution=1;c.resolution_u=1

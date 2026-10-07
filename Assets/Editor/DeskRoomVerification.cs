@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Linq;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -13,6 +14,8 @@ namespace PrGame.Editor
         private static double started;
         private static int frames;
         private static int testStep;
+        private static Camera ledCamera;
+        private static double ledStart;
         static DeskRoomVerification()
         {
             if (SessionState.GetBool("PrGame.Verify", false)) EditorApplication.update += Tick;
@@ -42,7 +45,25 @@ namespace PrGame.Editor
                 if (outside.x >= 0) throw new Exception("Off-monitor input was accepted");
                 var root = surface.GetComponent<UIDocument>().rootVisualElement;
                 Directory.CreateDirectory("Logs/QA");
-                if(testStep == 0) Capture(surface.viewCamera,"Logs/QA/desk-room.png");
+                if(testStep == 0)
+                {
+                    Capture(surface.viewCamera,"Logs/QA/desk-room.png");
+                    var keyboard=GameObject.Find("Refined / Keyboard");
+                    var renderers=keyboard.GetComponentsInChildren<Renderer>();
+                    var diffusers=renderers.Where(r=>r.name.StartsWith("RGB underkey")).ToArray();
+                    if(diffusers.Length!=67 || diffusers.Any(r=>r.sharedMaterial.shader.name!="PRGame/Keyboard RGB Wave" || !r.sharedMaterial.shader.isSupported))
+                        throw new Exception("Keyboard LED material or count mismatch");
+                    if(renderers.Any(r=>r.name.StartsWith("Legend ")))throw new Exception("Expected blank keycaps");
+                    var bounds=renderers[0].bounds;
+                    foreach(var r in renderers.Skip(1))bounds.Encapsulate(r.bounds);
+                    ledCamera=new GameObject("LED verification camera").AddComponent<Camera>();
+                    ledCamera.enabled=false;ledCamera.orthographic=true;ledCamera.orthographicSize=bounds.size.x*.34f;
+                    ledCamera.transform.position=bounds.center+new Vector3(0,1,-.4f);
+                    ledCamera.transform.LookAt(bounds.center);ledCamera.clearFlags=CameraClearFlags.SolidColor;
+                    ledCamera.backgroundColor=Color.black;
+                    Capture(ledCamera,"Logs/QA/keyboard-wave-a.png");
+                    ledStart=EditorApplication.timeSinceStartup;
+                }
                 var folders = new[] {"Aboutme", "Music", "Games", "Myprojects"};
                 if(testStep < 16)
                 {
@@ -59,7 +80,15 @@ namespace PrGame.Editor
                     return;
                 }
                 if(root.Q("FileWindow").style.display.value != DisplayStyle.None) throw new Exception("Close failed");
-                File.WriteAllText("Logs/QA/verification.txt","PASS: physical monitor ray mapping, off-screen rejection, all four folders open and close, scene rendering.\n");
+                if(EditorApplication.timeSinceStartup-ledStart<2) return;
+                Capture(ledCamera,"Logs/QA/keyboard-wave-b.png");
+                var a=new Texture2D(2,2);var b=new Texture2D(2,2);
+                a.LoadImage(File.ReadAllBytes("Logs/QA/keyboard-wave-a.png"));b.LoadImage(File.ReadAllBytes("Logs/QA/keyboard-wave-b.png"));
+                var pa=a.GetPixels32();var pb=b.GetPixels32();int changed=0;
+                for(int i=0;i<pa.Length;i++)if(Math.Abs(pa[i].r-pb[i].r)+Math.Abs(pa[i].g-pb[i].g)+Math.Abs(pa[i].b-pb[i].b)>30)changed++;
+                UnityEngine.Object.DestroyImmediate(a);UnityEngine.Object.DestroyImmediate(b);
+                if(changed<50)throw new Exception("RGB wave did not visibly animate");
+                File.WriteAllText("Logs/QA/verification.txt","PASS: physical monitor ray mapping, off-screen rejection, all four folders open and close, scene rendering, 67 unmarked keycaps with RGB diffusers; animated pixels="+changed+".\n");
                 Debug.Log("PR_GAME_3D_VERIFIED");
                 Finish(0);
             }

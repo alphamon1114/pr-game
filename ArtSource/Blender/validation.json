@@ -2,21 +2,21 @@
   {
     "model": "Mouse",
     "meshObjects": 29,
-    "vertices": 117318,
-    "triangles": 234648,
+    "vertices": 40130,
+    "triangles": 80528,
     "dimensionsMeters": [
       0.06168,
       0.1197,
-      0.03635
+      0.03633
     ],
     "finiteVertices": true,
     "shellNonManifoldEdges": 0
   },
   {
     "model": "Keyboard",
-    "meshObjects": 173,
-    "vertices": 125206,
-    "triangles": 245065,
+    "meshObjects": 147,
+    "vertices": 24886,
+    "triangles": 49188,
     "dimensionsMeters": [
       0.315,
       0.12,

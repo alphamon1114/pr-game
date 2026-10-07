@@ -1,0 +1,9 @@
+{
+  "priority": "Clean silhouette and undistorted surfaces over exact small details or high polygon density.",
+  "mouse": "Regular symmetric intersecting hexagonal openings, twin spine ribs, blue solid finish, no top DPI button; pattern placement and dragonfly engraving remain approximations of the product photos.",
+  "keyboard": "67 blank sculpted keycaps, restrained dark chassis, 67 separate under-key diffusers; no legends.",
+  "unityRgb": "One shared Keyboard RGB Wave material, world-space horizontal hue wave, 0.12 cycles per second. Shader changes visible diffuser colors, without per-key real-time lights or bloom.",
+  "verification": "Unity play-mode comparison found 24374 changed pixels after at least two seconds. All 67 diffuser materials use the supported wave shader. Monitor input and four-folder open/close checks pass.",
+  "geometry": "Closed mouse shell with zero non-manifold edges; finite vertex coordinates; 67 keycaps. Counts in validation.json.",
+  "backups": "Previous procedural source/models retained locally under Builds/BlenderRevisionBackup. VARCO models remain separate."
+}
