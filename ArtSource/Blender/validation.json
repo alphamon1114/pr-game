@@ -1,9 +1,9 @@
 [
   {
     "model": "Mouse",
-    "meshObjects": 30,
-    "vertices": 43672,
-    "triangles": 87612,
+    "meshObjects": 33,
+    "vertices": 46522,
+    "triangles": 93300,
     "dimensionsMeters": [
       0.0625,
       0.1197,

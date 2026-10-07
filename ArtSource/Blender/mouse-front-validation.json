@@ -1,0 +1,21 @@
+{
+  "references": [
+    "https://www.atk.store/cdn/shop/files/3_3.jpg?v=1788945722&width=1500",
+    "https://www.atk.store/cdn/shop/files/3_492cb49d-6230-438f-8ae8-5ab993fb4678.jpg?v=1788945733&width=1500"
+  ],
+  "change": "Wide separate button lips and lowered central bridge; oblique photo taper no longer used as nose footprint.",
+  "Continuous curved blue shell": {
+    "nonManifoldEdges": 0,
+    "signedVolume": 2.5427025592464297e-06
+  },
+  "Rounded lower grip skirt": {
+    "nonManifoldEdges": 0,
+    "signedVolume": 2.5964402769881146e-06
+  },
+  "Lowered front bridge": {
+    "nonManifoldEdges": 0,
+    "signedVolume": 1.0015250593862774e-07
+  },
+  "frontLipWidthMm": 53.278688341379166,
+  "notes": "Regular lattice and dragonfly linework are still simplified approximations. No photo textures applied."
+}

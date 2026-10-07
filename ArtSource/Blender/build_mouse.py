@@ -91,7 +91,8 @@ verts=[];faces=[];n=384
 for z in [.001,.0027]:
  for i in range(n):
   a=2*math.pi*i/n;y=.0588*math.sin(a);x=radius(y)*math.cos(a)/max(.001,abs(math.cos(a))) if abs(math.cos(a))>.0001 else 0
-  verts.append((x*.96,y,z))
+  front=max(0,min(1,(y+.005)/.050));front=front*front*(3-2*front)
+  verts.append((x*.96,y-.006*front,z))
 faces.extend([tuple(reversed(range(n))),tuple(range(n,2*n))])
 for i in range(n):faces.append((i,(i+1)%n,(i+1)%n+n,i+n))
 base=mesh('Low enclosed underside',verts,faces,dark);bevel(base,.00035)
@@ -99,11 +100,16 @@ base=mesh('Low enclosed underside',verts,faces,dark);bevel(base,.00035)
 outline=[photo(750-profile['sample'](v,1),v) for v in range(194,1338,3)]
 outline += [photo(750,1338)]
 outline += [photo(750+profile['sample'](v,1),v) for v in reversed(range(194,1338,3))]
+front_width=profile['sample'](194,1)
+outline += [photo(750+front_width*(1-2*i/64),194) for i in range(1,64)]
 vs=[];fs=[];n=len(outline)
 for inward,bottom in [(False,False),(False,True),(True,True),(True,False)]:
  for x,y in outline:
-  h=height(x,y)-.0004
-  vs.append((x*(.975 if inward else .997),y*(.990 if inward else .999),.0028 if bottom else h))
+  front=max(0,min(1,(y+.005)/.050))
+  front=front*front*(3-2*front)
+  h=height(x,y)-.0004-.0006*front-.0017*math.exp(-(x/.0048)**4)*front**3
+  yy=y*(.990 if inward else .999)-(.006*front if bottom else 0)
+  vs.append((x*(.975 if inward else .997),yy,.0028 if bottom else h))
 for k in range(4):
  for i in range(n):
   j=(i+1)%n;kn=(k+1)%4
@@ -111,6 +117,32 @@ for k in range(4):
 skirt=mesh('Rounded lower grip skirt',vs,fs,blue)
 for f in skirt.data.polygons:f.use_smooth=True
 skirt.data.set_sharp_from_angle(angle=.6)
+# A lowered central bridge sits between the two wide button fronts; the wheel
+# channel is open toward the nose instead of ending in two pointed prongs.
+vs=[];fs=[];rows=28;cols=16
+for layer in [0,1]:
+ for j in range(rows+1):
+  t=j/rows;y=.05925-.01475*t
+  for i in range(cols+1):
+   u=-1+2*i/cols;x=.00485*u
+   z=.0141+.0092*t+.0005*(1-u*u)-layer*.0007
+   vs.append((x,y,z))
+count=(rows+1)*(cols+1)
+for j in range(rows):
+ for i in range(cols):
+  k=j*(cols+1)+i;face=(k,k+cols+1,k+cols+2,k+1)
+  fs.append(face);fs.append(tuple(v+count for v in reversed(face)))
+boundary=list(range(cols+1))+[j*(cols+1)+cols for j in range(1,rows+1)]
+boundary+=list(range(rows*(cols+1)+cols-1,rows*(cols+1)-1,-1))
+boundary+=[j*(cols+1) for j in range(rows-1,0,-1)]
+for a,b in zip(boundary,boundary[1:]+boundary[:1]):fs.append((a,b,b+count,a+count))
+bridge=mesh('Lowered front bridge',vs,fs,blue)
+for f in bridge.data.polygons:f.use_smooth=True
+bridge.data.set_sharp_from_angle(angle=.6)
+usb=box('USB-C front recess',(0,.0562,.0075),(.0100,.0011,.0038),rubber)
+usb.rotation_euler.x=-math.atan(.006/.012)
+tongue=box('USB-C inner tongue',(0,.0568,.00735),(.0071,.00035,.0010),accent)
+tongue.rotation_euler.x=usb.rotation_euler.x
 # No top DPI button. Only a transverse scroll wheel and two left thumb buttons.
 # Dense rounded rubber barrel with geometric knurling instead of box-shaped ribs.
 vs=[];fs=[];around=128;across=16
@@ -132,7 +164,7 @@ for f in wheel.data.polygons:f.use_smooth=len(f.vertices)==4
 wheel.data.set_sharp_from_angle(angle=.6)
 for y in [.001,.016]:
  # Flush into the side wall; long bevelled surfaces instead of protruding blocks.
- o=box('Left thumb button',(-radius(y)*.988,y,.017),(.0020,.0135,.0038),blue)
+ o=box('Left thumb button',(-radius(y)*.988,y,.0220),(.0020,.0135,.0038),blue)
 
 # Fine blue-on-blue panel lines, deliberately restrained rather than painted fake holes.
 def line(name,points):
@@ -192,6 +224,12 @@ cam.location=(-.30,0,.043);cam.rotation_euler=(Vector((0,0,.020))-cam.location).
 scene.render.resolution_y=750;d.ortho_scale=.15
 scene.render.filepath=os.path.join(PREVIEW,'mouse-side.png');bpy.ops.render.render(write_still=True)
 scene.render.resolution_y=1200;d.ortho_scale=.155
+cam.location=(0,.30,.066);cam.rotation_euler=(Vector((0,.01,.018))-cam.location).to_track_quat('-Z','Y').to_euler()
+d.ortho_scale=.085;scene.render.resolution_y=900
+scene.render.filepath=os.path.join(PREVIEW,'mouse-front.png');bpy.ops.render.render(write_still=True)
+cam.location=(-.14,.22,.15);cam.rotation_euler=(Vector((0,.01,.019))-cam.location).to_track_quat('-Z','Y').to_euler()
+d.ortho_scale=.155;scene.render.resolution_y=1200
+scene.render.filepath=os.path.join(PREVIEW,'mouse-front-angle.png');bpy.ops.render.render(write_still=True)
 print('MOUSE_CLEAN_EXPORTED')
 
 # An unperforated form study makes dents and silhouette discontinuities visible.

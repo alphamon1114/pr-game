@@ -12,7 +12,7 @@ outline=[(750-w,v) for v,w in stations]+[(750+w,v) for v,w in reversed(stations)
 body=Polygon(outline)
 holes=[Polygon(p).buffer(0).buffer(-1.5).buffer(1.5,quad_segs=5).intersection(body.buffer(-8)) for p in json.loads((root/'mouse_apertures.json').read_text())]
 seam=LineString([(455+i*590/120,775-88*((455+i*590/120-750)/295)**2) for i in range(121)]).buffer(2)
-holes += [seam,box(746,190,754,775),box(701,328,790,524).buffer(3)]
+holes += [seam,box(746,190,754,775),box(701,185,799,524).buffer(3)]
 shape=body.difference(unary_union(holes))
 triangles=constrained_delaunay_triangles(shape)
 vertices=[];faces=[];lookup={}
