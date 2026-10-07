@@ -3,7 +3,7 @@ import json, math
 from pathlib import Path
 from shapely.geometry import Polygon, LineString, box
 from shapely.ops import unary_union
-from shapely import constrained_delaunay_triangles
+from shapely import constrained_delaunay_triangles, set_precision
 
 root=Path(__file__).parent
 from profile import sample
@@ -14,6 +14,11 @@ holes=[Polygon(p).buffer(0).buffer(-1.5).buffer(1.5,quad_segs=5).intersection(bo
 seam=LineString([(455+i*590/120,775-88*((455+i*590/120-750)/295)**2) for i in range(121)]).buffer(2)
 holes += [seam,box(746,190,754,775),box(701,185,799,524).buffer(3)]
 shape=body.difference(unary_union(holes))
+# Only the two leading button corners need a small plan-view radius. Keep the
+# dense lattice untouched; global polygon rounding can collapse its thin ribs.
+front=shape.intersection(box(400,180,1100,420)).buffer(-3).buffer(3,quad_segs=8)
+rear=shape.intersection(box(400,410,1100,1400))
+shape=set_precision(unary_union([front,rear]),.005)
 triangles=constrained_delaunay_triangles(shape)
 vertices=[];faces=[];lookup={}
 for tri in triangles.geoms:

@@ -122,9 +122,10 @@ skirt.data.set_sharp_from_angle(angle=.6)
 vs=[];fs=[];rows=28;cols=16
 for layer in [0,1]:
  for j in range(rows+1):
-  t=j/rows;y=.05925-.01475*t
+  t=j/rows
   for i in range(cols+1):
    u=-1+2*i/cols;x=.00485*u
+   y=(.05825-.00055*u*u)*(1-t)+.0445*t
    z=.0141+.0092*t+.0005*(1-u*u)-layer*.0007
    vs.append((x,y,z))
 count=(rows+1)*(cols+1)

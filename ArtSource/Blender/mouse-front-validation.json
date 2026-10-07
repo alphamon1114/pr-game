@@ -1,21 +1,56 @@
 {
   "references": [
-    "https://www.atk.store/cdn/shop/files/3_3.jpg?v=1788945722&width=1500",
-    "https://www.atk.store/cdn/shop/files/3_492cb49d-6230-438f-8ae8-5ab993fb4678.jpg?v=1788945733&width=1500"
+    "https://www.atk.store/cdn/shop/files/90802491697fb06d2b3df760cb27710a.jpg?v=1788512385&width=1500"
   ],
-  "change": "Wide separate button lips and lowered central bridge; oblique photo taper no longer used as nose footprint.",
+  "change": "Swept cubic button fronts following the top-view contour; rounded inner tips and recessed central bridge.",
   "Continuous curved blue shell": {
     "nonManifoldEdges": 0,
-    "signedVolume": 2.5427025592464297e-06
+    "signedVolume": 2.3682785546128497e-06
   },
   "Rounded lower grip skirt": {
     "nonManifoldEdges": 0,
-    "signedVolume": 2.5964402769881146e-06
+    "signedVolume": 2.4701971097833963e-06
   },
   "Lowered front bridge": {
     "nonManifoldEdges": 0,
-    "signedVolume": 1.0015250593862774e-07
+    "signedVolume": 9.210794163291225e-08
   },
-  "frontLipWidthMm": 53.278688341379166,
+  "topOutlineComparison": {
+    "photoRows": [
+      210,
+      230,
+      250,
+      270,
+      290,
+      310,
+      330,
+      350,
+      370
+    ],
+    "referenceHalfWidthsPx": [
+      78,
+      114,
+      160,
+      212,
+      263,
+      286,
+      296,
+      301,
+      301
+    ],
+    "modelHalfWidthsPx": [
+      72.712,
+      114.121,
+      162.05,
+      213.666,
+      259.024,
+      287.697,
+      299.671,
+      301.0,
+      301.0
+    ],
+    "rmsePx": 2.730902851616544,
+    "scope": "2D front silhouette only; this does not measure complete 3D reproduction accuracy."
+  },
   "notes": "Regular lattice and dragonfly linework are still simplified approximations. No photo textures applied."
 }

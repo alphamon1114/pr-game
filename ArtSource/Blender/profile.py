@@ -1,18 +1,27 @@
-"""Broad rounded button fronts, smooth crown, and elliptical rear outline."""
+"""Swept button fronts traced from the top view, with a smooth rounded crown."""
 import math
 # Image row, half-width in reference pixels, crown height, side shoulder height.
-# The front-view reference has a wide lip; the oblique top photograph's apparent
-# tapered nose must not be interpreted as the physical plan-view footprint.
-STATIONS=[(194,260,.0162,.0154),(242,300,.0183,.0152),(300,300,.0202,.0155),
- (340,299,.0224,.0160),(430,297,.0250,.0185),(550,288,.0290,.0210),(690,281,.0337,.0240),
+# The button edges sweep rearward toward the outer shoulders in plan view.
+# Their fronts remain almost level in elevation, rather than forming a dome tip.
+STATIONS=[(194,44,.0162,.0154),(242,136,.0183,.0152),(300,266,.0202,.0155),
+ (340.4,301,.0224,.0160),(370,301,.0231,.0163),(430,297,.0250,.0185),(550,288,.0290,.0210),(690,281,.0337,.0240),
  (780,284,.0364,.0250),(875,292,.0373,.0250),(980,302,.0356,.0220),(1042,305,.0328,.0180),
  (1140,287,.0266,.0100),(1200,258,.0210,.0062),(1260,206,.0146,.0048),(1300,150,.0100,.0045),(1338,0,.0045,.0045)]
 from functools import lru_cache
 @lru_cache(maxsize=262144)
 def sample(x,column):
- if column==1 and x<242:
-  t=min(1,max(0,(x-194)/48))
-  return 260+40*math.sqrt(max(0,1-(1-t)**2))
+ if column==1 and x<340.4:
+  # One continuous cubic joins the inner button lip to the outer shoulder.
+  # The final tangent is parallel to the side, with no quarter-circle corner
+  # attached to a long straight front edge.
+  lo=0.;hi=1.
+  for _ in range(30):
+   t=(lo+hi)/2;s=1-t
+   v=194*s**3+3*270.4*s*s*t+3*279*s*t*t+340.4*t**3
+   if v<x:lo=t
+   else:hi=t
+  t=(lo+hi)/2;s=1-t
+  return 44*s**3+3*172.7*s*s*t+3*301*s*t*t+301*t**3
  # Analytic round tail: finite tip curvature instead of a pointed wedge.
  if column==1 and x>=1042:
   t=min(1,max(0,(x-1042)/296))

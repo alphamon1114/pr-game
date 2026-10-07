@@ -2,11 +2,11 @@
   {
     "model": "Mouse",
     "meshObjects": 33,
-    "vertices": 46522,
-    "triangles": 93300,
+    "vertices": 45146,
+    "triangles": 90548,
     "dimensionsMeters": [
       0.0625,
-      0.1197,
+      0.11964,
       0.03629
     ],
     "finiteVertices": true,
