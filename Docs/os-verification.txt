@@ -1,0 +1,1 @@
+PASS: storage/recovery; monitor fit and 5 ray coordinates; off-screen input; pointer start/app launch; notes and live search; rename/delete/restore; browser tabs/history; window maximize/restore/resize; island hide/reveal; themes; per-card notification dismissal; lock/session restore; Save As filename/folder; saved-file search/explorer and persistence.

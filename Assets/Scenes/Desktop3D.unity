@@ -6369,8 +6369,8 @@ Transform:
   m_GameObject: {fileID: 938272363}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.0000000027719416, y: 1.5900347, z: 0.7352595}
-  m_LocalScale: {x: 1.2411149, y: 0.6981271, z: 1}
+  m_LocalPosition: {x: -0.00000000190076, y: 1.5071428, z: 0.7473571}
+  m_LocalScale: {x: 1.1953664, y: 0.67239356, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 938170379}
@@ -12279,6 +12279,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PrGame.SeatedView
   atmosphere: 0.35
   deskLamp: {fileID: 293839476}
+  defaultFieldOfView: 47
+  focusFieldOfView: 34
 --- !u!20 &1692472848
 Camera:
   m_ObjectHideFlags: 0
