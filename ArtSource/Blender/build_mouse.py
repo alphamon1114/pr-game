@@ -30,16 +30,10 @@ def box(name,loc,size,material):
  bpy.ops.object.transform_apply(location=False,rotation=False,scale=True);o.data.materials.append(material);parts.append(o);bevel(o,.0005);return o
 import runpy
 profile=runpy.run_path(os.path.join(os.path.dirname(__file__),'profile.py'))
-lerp_station=profile['sample']
 
 def photo(x,v):return ((x-750)*.0625/610,.05985-(v-194)*.1197/1144)
-def radius(y):return lerp_station(194+(.05985-y)*1144/.1197,1)*.0625/610
-def height(x,y):
- r=max(.0001,radius(y))
- t=(y+.004)
- if t<0:centre=.0025+.0348*math.sqrt(max(0,1-(t/.05585)**2))
- else:centre=.0373-.015*(t/.06385)**2
- return .0025+(centre-.0025)*math.sqrt(max(0,1-(x/r)**2))
+radius=profile['radius']
+height=profile['height']
 
 # Constrained planar triangulation preserves every aperture and panel seam.
 # Subdivide before projecting: no intersecting 3D Boolean cutters are used.
@@ -76,13 +70,15 @@ new.materials.append(blue);new.materials.append(mat('Blue aperture walls',(.005,
 for i,f in enumerate(new.polygons):
  f.material_index=0 if i<top_count else (2 if i<top_count*2 else 1)
  f.use_smooth=i<top_count*2
-normals=[];eps=.000008
+normals=[];eps=.000001
 for f in new.polygons:
  for li in f.loop_indices:
   v=new.vertices[new.loops[li].vertex_index].co
   if f.material_index==0:
-   dx=(height(v.x+eps,v.y)-height(v.x-eps,v.y))/(2*eps)
-   dy=(height(v.x,v.y+eps)-height(v.x,v.y-eps))/(2*eps)
+   # Extend the analytic roof for differentiation. Clamping at the perimeter
+   # halved its derivative and produced triangular highlight dents on the rim.
+   dx=(height(v.x+eps,v.y,False)-height(v.x-eps,v.y,False))/(2*eps)
+   dy=(height(v.x,v.y+eps,False)-height(v.x,v.y-eps,False))/(2*eps)
    normals.append(tuple(Vector((-dx,-dy,1)).normalized()))
   else:normals.append(tuple(f.normal))
 new.normals_split_custom_set(normals)
@@ -99,6 +95,22 @@ for z in [.001,.0027]:
 faces.extend([tuple(reversed(range(n))),tuple(range(n,2*n))])
 for i in range(n):faces.append((i,(i+1)%n,(i+1)%n+n,i+n))
 base=mesh('Low enclosed underside',verts,faces,dark);bevel(base,.00035)
+# The roof ends above a short grip skirt instead of descending to the desk.
+outline=[photo(750-profile['sample'](v,1),v) for v in range(194,1338,3)]
+outline += [photo(750,1338)]
+outline += [photo(750+profile['sample'](v,1),v) for v in reversed(range(194,1338,3))]
+vs=[];fs=[];n=len(outline)
+for inward,bottom in [(False,False),(False,True),(True,True),(True,False)]:
+ for x,y in outline:
+  h=height(x,y)-.0004
+  vs.append((x*(.975 if inward else .997),y*(.990 if inward else .999),.0028 if bottom else h))
+for k in range(4):
+ for i in range(n):
+  j=(i+1)%n;kn=(k+1)%4
+  fs.append((kn*n+i,kn*n+j,k*n+j,k*n+i))
+skirt=mesh('Rounded lower grip skirt',vs,fs,blue)
+for f in skirt.data.polygons:f.use_smooth=True
+skirt.data.set_sharp_from_angle(angle=.6)
 # No top DPI button. Only a transverse scroll wheel and two left thumb buttons.
 # Dense rounded rubber barrel with geometric knurling instead of box-shaped ribs.
 vs=[];fs=[];around=128;across=16
@@ -109,7 +121,7 @@ for i in range(across+1):
   a=2*math.pi*j/around
   grip=.00017*max(0,math.cos(a*32))*max(0,math.cos(2*math.pi*i/4))
   r=.00885+.00035*math.sin(edge*math.pi/2)+grip
-  vs.append((x,.0358+r*math.sin(a),.0272+r*math.cos(a)))
+  vs.append((x,.0358+r*math.sin(a),.0238+r*math.cos(a)))
 for i in range(across):
  for j in range(around):
   k=i*around+j;n=i*around+(j+1)%around
@@ -120,7 +132,7 @@ for f in wheel.data.polygons:f.use_smooth=len(f.vertices)==4
 wheel.data.set_sharp_from_angle(angle=.6)
 for y in [.001,.016]:
  # Flush into the side wall; long bevelled surfaces instead of protruding blocks.
- o=box('Left thumb button',(-radius(y)*.945,y,.016),(.0020,.0135,.0040),blue)
+ o=box('Left thumb button',(-radius(y)*.988,y,.017),(.0020,.0135,.0038),blue)
 
 # Fine blue-on-blue panel lines, deliberately restrained rather than painted fake holes.
 def line(name,points):
@@ -176,6 +188,10 @@ cam.location=(-.13,-.19,.20);cam.rotation_euler=(Vector((0,0,.018))-cam.location
 scene.render.resolution_x=1200;scene.render.resolution_y=1200;scene.render.resolution_percentage=100;scene.view_settings.view_transform='AgX'
 scene.render.filepath=os.path.join(PREVIEW,'mouse-clean.png');bpy.ops.render.render(write_still=True)
 cam.location=(0,0,.3);cam.rotation_euler=(0,0,0);scene.render.filepath=os.path.join(PREVIEW,'mouse-top.png');bpy.ops.render.render(write_still=True)
+cam.location=(-.30,0,.043);cam.rotation_euler=(Vector((0,0,.020))-cam.location).to_track_quat('-Z','Y').to_euler()
+scene.render.resolution_y=750;d.ortho_scale=.15
+scene.render.filepath=os.path.join(PREVIEW,'mouse-side.png');bpy.ops.render.render(write_still=True)
+scene.render.resolution_y=1200;d.ortho_scale=.155
 print('MOUSE_CLEAN_EXPORTED')
 
 # An unperforated form study makes dents and silhouette discontinuities visible.

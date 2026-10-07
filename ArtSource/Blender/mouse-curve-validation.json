@@ -1,0 +1,15 @@
+{
+  "Continuous curved blue shell": {
+    "nonManifoldEdges": 0,
+    "signedVolume": 2.4461231300641183e-06
+  },
+  "Rounded lower grip skirt": {
+    "nonManifoldEdges": 0,
+    "signedVolume": 1.3881879104799198e-06
+  },
+  "tailWidth2mmBeforeTipMm": {
+    "before": 13.545200258569505,
+    "after": 22.095466444362312
+  },
+  "curveChange": "Round elliptical rear, broad smooth crown, lower front buttons, independent grip skirt, unclamped analytic shading derivatives."
+}

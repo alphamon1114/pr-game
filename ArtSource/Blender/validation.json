@@ -1,13 +1,13 @@
 [
   {
     "model": "Mouse",
-    "meshObjects": 29,
-    "vertices": 40130,
-    "triangles": 80528,
+    "meshObjects": 30,
+    "vertices": 43672,
+    "triangles": 87612,
     "dimensionsMeters": [
-      0.06168,
+      0.0625,
       0.1197,
-      0.03633
+      0.03629
     ],
     "finiteVertices": true,
     "shellNonManifoldEdges": 0
