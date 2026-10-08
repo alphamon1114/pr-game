@@ -12,6 +12,16 @@ namespace PrGame
         public DesktopFileSystem Files { get; private set; }
         public VisualElement Root => desktop;
         public bool IsLocked => locked;
+        public void SuspendInput()
+        {
+            // Preserve windows and notes, but release typing and active drags.
+            var panel = desktop?.panel;
+            panel?.focusController?.focusedElement?.Blur();
+            var captured = panel?.GetCapturingElement(PointerId.mousePointerId);
+            captured?.ReleasePointer(PointerId.mousePointerId);
+            SaveNoteTitle();
+            if (Files?.Dirty == true) Files.Save();
+        }
         public bool IsTyping
         {
             get
@@ -41,6 +51,11 @@ namespace PrGame
             var document=GetComponent<UIDocument>();
             if(!GetComponent<MonitorSurface>() && document.panelSettings) document.panelSettings.referenceResolution=new Vector2Int(1280,720);
             var root=document.rootVisualElement;root.Clear();root.style.flexGrow=1;
+            root.RegisterCallback<KeyDownEvent>(evt=>
+            {
+                var surface=GetComponent<MonitorSurface>();
+                if(surface && surface.seatedView && !surface.seatedView.CanInteractWithComputer) evt.StopImmediatePropagation();
+            },TrickleDown.TrickleDown);
             var styles=Resources.Load<StyleSheet>("Desktop/Desktop");if(styles)root.styleSheets.Add(styles);
             var font=Resources.Load<Font>("Fonts/NotoSansKR-Regular");if(font)root.style.unityFontDefinition=FontDefinition.FromFont(font);
             desktop=El(root,"desktop","Desktop");desktop.focusable=true;

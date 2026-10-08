@@ -69,7 +69,7 @@ namespace PrGame
         public Vector2 ScreenToPanel(Vector2 position)
         {
             if (!viewCamera || !screenCollider || !screenTexture ||
-                (seatedView && seatedView.IsLooking))
+                (seatedView && !seatedView.CanInteractWithComputer))
                 return new Vector2(-10000, -10000);
             // UI Toolkit supplies top-left screen coordinates; Camera expects bottom-left.
             var ray = viewCamera.ScreenPointToRay(new Vector3(position.x, Screen.height - position.y));

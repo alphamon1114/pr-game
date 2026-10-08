@@ -96,8 +96,9 @@ namespace PrGame.Editor
                     else if(name.Contains("rubber")){c=new Color(.022f,.028f,.035f);metal=0;smooth=.18f;}
                     else if(name.Contains("satin stand")){c=new Color(.10f,.11f,.13f);metal=.65f;smooth=.62f;}
                     else if(name.Contains("red accent")){c=new Color(.54f,.025f,.038f);metal=.3f;smooth=.5f;}
+                    else if(name.Contains("etched markings")){c=new Color(.42f,.44f,.46f);smooth=.2f;metal=0;}
                     else if(name.Contains("Power light")){c=new Color(.45f,.7f,.8f);smooth=.5f;}
-                    m.color=c;m.SetFloat("_Metallic",metal);m.SetFloat("_Glossiness",smooth);
+                    m.color=c.gamma;m.SetFloat("_Metallic",metal);m.SetFloat("_Glossiness",smooth);
                     importer.AddRemap(new AssetImporter.SourceAssetIdentifier(typeof(Material),name),m);
                     EditorUtility.SetDirty(m);
                 }

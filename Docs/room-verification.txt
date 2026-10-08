@@ -1,0 +1,2 @@
+PASS: room starts outside computer mode; floor-plan landmarks and east/right window; supported PBR/contact-shadow shaders; physical approach; 80% framing at 16:9, 4:3, 21:9 and 9:16; gated OS input; return to seat; typing focus released; note window preserved.
+PASS: display contrast preservation; graded and ungraded screen interiors have identical RGB values (880 x 490 pixel comparison).

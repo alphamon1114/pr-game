@@ -54,11 +54,17 @@ namespace PrGame.Editor
             {
                 var os=UnityEngine.Object.FindAnyObjectByType<PortfolioDesktop>();var surface=UnityEngine.Object.FindAnyObjectByType<MonitorSurface>();
                 if(!os || os.Root?.panel==null)return;
-                if(step==0){next+=6;step++;return;}
+                if(step==0){next+=6;step=-1;return;}
+                if(step==-1)
+                {
+                    RoomViewVerification.CheckRoom(surface);surface.seatedView.EnterComputer();
+                    Assert(!surface.seatedView.CanInteractWithComputer,"OS accepted input during approach");next+=2;step=1;return;
+                }
                 var root=os.Root;
                 switch(step)
                 {
                     case 1:
+                        RoomViewVerification.CheckFocused(surface);
                         CheckMonitor(surface);Capture(surface,"01-desktop");Click(root.Q<Button>("StartButton"));break;
                     case 2:
                         Assert(root.Q("StartMenu").resolvedStyle.display==DisplayStyle.Flex,"Start did not open via pointer");Capture(surface,"02-start");Click(root.Q<Button>("Start-explorer"));break;
@@ -127,7 +133,10 @@ namespace PrGame.Editor
                     case 27:
                         Assert(Math.Abs(os.GetWindow("explorer").resolvedStyle.left-SessionState.GetFloat("PrGame.OSBeforeX",0)-50)<3,"Window title drag failed");
                         File.WriteAllText("Logs/OSQA/results.txt","PASS: storage/recovery; monitor fit and 5 ray coordinates; off-screen input; pointer start/app launch; notes and live search; rename/delete/restore; browser tabs/history; window maximize/restore/resize; island hide/reveal; themes; per-card notification dismissal; lock/session restore; Save As filename/folder; saved-file search/explorer and persistence.\n");
-                        Debug.Log("PR_GAME_OS_VERIFIED");Finish(0);return;
+                        Debug.Log("PR_GAME_OS_VERIFIED");os.OpenApp("notes");root.Q<TextField>("NoteBody").Focus();
+                        surface.seatedView.LeaveComputer();next+=2;break;
+                    case 28:
+                        RoomViewVerification.CheckReturned(surface,os);Finish(0);return;
                 }
                 step++;
             }
@@ -159,7 +168,20 @@ namespace PrGame.Editor
         static void Capture(MonitorSurface surface,string name)
         {
             SaveTexture(surface.screenTexture,"Logs/OSQA/"+name+"-screen.png");
-            var target=new RenderTexture(1600,900,24);var camera=surface.viewCamera;var previous=camera.targetTexture;camera.targetTexture=target;camera.Render();SaveTexture(target,"Logs/OSQA/"+name+"-room.png");camera.targetTexture=previous;target.Release();UnityEngine.Object.DestroyImmediate(target);
+            var target=new RenderTexture(1600,900,24);var camera=surface.viewCamera;var previous=camera.targetTexture;
+            float aspect=camera.aspect;var position=camera.transform.position;var rotation=camera.transform.rotation;
+            try
+            {
+                camera.targetTexture=target;camera.aspect=1600f/900f;
+                if(surface.seatedView.IsFocused && surface.seatedView.TryGetFocusPose(out var p,out var q))camera.transform.SetPositionAndRotation(p,q);
+                camera.Render();SaveTexture(target,"Logs/OSQA/"+name+"-room.png");
+                if(name=="03-explorer")
+                {
+                    var grade=camera.GetComponent<NightLighting>();grade.enabled=false;
+                    camera.Render();SaveTexture(target,"Logs/OSQA/03-explorer-ungraded.png");grade.enabled=true;
+                }
+            }
+            finally {camera.targetTexture=previous;camera.aspect=aspect;camera.transform.SetPositionAndRotation(position,rotation);target.Release();UnityEngine.Object.DestroyImmediate(target);}
         }
         static void SaveTexture(RenderTexture target,string path)
         {

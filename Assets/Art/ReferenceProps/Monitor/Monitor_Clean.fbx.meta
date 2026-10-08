@@ -7,8 +7,23 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Dark display glass
+    second: {fileID: 2100000, guid: 9bfb162dc1432b544a90e77bd466b9ae, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Dark display glass.001
     second: {fileID: 2100000, guid: 3b71837e56620a6499d04843a93250b7, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Monitor etched markings
+    second: {fileID: 2100000, guid: da105a54e85dd4f4097ac1fffe78c73c, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Monitor graphite
+    second: {fileID: 2100000, guid: ae3828b486e10624ba1f05836f9d3cc9, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -17,8 +32,18 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Monitor satin stand
+    second: {fileID: 2100000, guid: 9ffb5101808aaf44cba47eeb447a2a17, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Monitor satin stand.001
     second: {fileID: 2100000, guid: 958d9dd2cfd7fb045869eedf87ef83a6, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Monitor soft black bezel
+    second: {fileID: 2100000, guid: 6d7e935043411d0408f36c08a1b8cc2d, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -27,8 +52,18 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
+      name: Power light
+    second: {fileID: 2100000, guid: cc042f6a079867840ac830c32e96d497, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
       name: Power light.001
     second: {fileID: 2100000, guid: d7695b7835b7bf94b9d90e3a808e6e87, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Stand red accent
+    second: {fileID: 2100000, guid: 9293f8ea5f68a2240a0ea3e601bca2ca, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
@@ -46,10 +81,10 @@ ModelImporter:
     resampleCurves: 1
     optimizeGameObjects: 0
     removeConstantScaleCurves: 0
-    motionNodeName:
-    animationImportErrors:
-    animationImportWarnings:
-    animationRetargetingWarnings:
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
     animationDoRetargetingWarnings: 0
     importAnimatedCustomProperties: 0
     importConstraints: 0
@@ -128,7 +163,7 @@ ModelImporter:
     legStretch: 0.05
     feetSpacing: 0
     globalScale: 1
-    rootMotionBoneName:
+    rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0
     skeletonHasParents: 1
@@ -141,6 +176,6 @@ ModelImporter:
   importBlendShapeDeformPercent: 1
   remapMaterialsIfMaterialImportModeIsNone: 0
   additionalBone: 0
-  userData:
-  assetBundleName:
-  assetBundleVariant:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
