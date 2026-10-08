@@ -9,7 +9,8 @@ namespace PrGame
         public Light deskLamp;
         public float defaultFieldOfView = 58f;
         public float focusFieldOfView = 48f;
-        [Range(.5f, .9f)] public float monitorViewportFraction = .8f;
+        [Tooltip("Visible OS screen fill on the limiting axis; 0.92 covers 84.64% of a 16:9 view.")]
+        [Range(.5f, .96f)] public float screenViewportFraction = .92f;
         public bool IsLooking { get; private set; }
         public bool IsFocused { get; private set; }
         public bool CanInteractWithComputer { get; private set; }
@@ -20,7 +21,6 @@ namespace PrGame
         bool waitForMouseRelease;
         PortfolioDesktop desktop;
         MonitorSurface monitor;
-        Renderer[] monitorFrame;
         Font helpFont;
 
         void Awake()
@@ -31,9 +31,6 @@ namespace PrGame
             lampIntensity = deskLamp ? deskLamp.intensity : 1f;
             desktop = FindAnyObjectByType<PortfolioDesktop>();
             monitor = FindAnyObjectByType<MonitorSurface>();
-            var model = GameObject.Find("Refined / Monitor");
-            monitorFrame = model ? System.Array.FindAll(model.GetComponentsInChildren<Renderer>(),
-                r=>r.name=="Monitor housing" || r.name.Contains("light shield")) : new Renderer[0];
             helpFont = Resources.Load<Font>("Fonts/NotoSansKR-Regular");
         }
 
@@ -54,7 +51,7 @@ namespace PrGame
             StopLooking();
         }
 
-        // Fit the physical screen in perspective, including wide/portrait displays.
+        // Frame only the usable OS display, not the bezel or projecting light shields.
         public bool TryGetFocusPose(out Vector3 position, out Quaternion rotation)
         {
             position = seatedPosition; rotation = seatedRotation;
@@ -63,14 +60,12 @@ namespace PrGame
             var renderer = screen.GetComponent<Renderer>();
             if (!renderer) return false;
             var bounds = renderer.bounds;
-            foreach (var part in monitorFrame) if(part) bounds.Encapsulate(part.bounds);
             float tangent = Mathf.Tan(focusFieldOfView * Mathf.Deg2Rad * .5f);
-            // Include the light shields, whose front edges project larger than the glass.
-            float distance = Mathf.Max(bounds.size.x / (2f * tangent * view.aspect * monitorViewportFraction),
-                bounds.size.y / (2f * tangent * monitorViewportFraction));
+            float distance = Mathf.Max(bounds.size.x / (2f * tangent * view.aspect * screenViewportFraction),
+                bounds.size.y / (2f * tangent * screenViewportFraction));
             distance = Mathf.Max(distance, view.nearClipPlane + .15f);
             rotation = Quaternion.LookRotation(screen.forward, screen.up);
-            position = new Vector3(bounds.center.x,bounds.center.y,bounds.min.z) - screen.forward * distance;
+            position = bounds.center - screen.forward * distance;
             return true;
         }
 

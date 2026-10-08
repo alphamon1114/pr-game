@@ -79,7 +79,7 @@ namespace PrGame.Editor
             camera.cullingMask=~(1<<8); // The player's own chair must not intersect their first-person view.
             var grade=camera.GetComponent<NightLighting>();if(!grade)grade=camera.gameObject.AddComponent<NightLighting>();
             grade.shader=Shader.Find("Hidden/PRGame/NightLighting");grade.exposure=1.45f;
-            var view=camera.GetComponent<SeatedView>();view.defaultFieldOfView=58;view.focusFieldOfView=48;view.monitorViewportFraction=.8f;view.atmosphere=.25f;
+            var view=camera.GetComponent<SeatedView>();view.defaultFieldOfView=58;view.focusFieldOfView=48;view.screenViewportFraction=.92f;view.atmosphere=.25f;
             RenderSettings.ambientMode=AmbientMode.Trilight;
             RenderSettings.ambientSkyColor=new Color(.35f,.40f,.48f);
             RenderSettings.ambientEquatorColor=new Color(.25f,.28f,.32f);

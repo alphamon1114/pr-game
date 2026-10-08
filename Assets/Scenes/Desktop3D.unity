@@ -3169,7 +3169,7 @@ MonoBehaviour:
   deskLamp: {fileID: 306980945}
   defaultFieldOfView: 58
   focusFieldOfView: 48
-  monitorViewportFraction: 0.8
+  screenViewportFraction: 0.92
 --- !u!20 &1692472848
 Camera:
   m_ObjectHideFlags: 0

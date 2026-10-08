@@ -58,18 +58,22 @@ namespace PrGame.Editor
                 {
                     camera.aspect=ratio;camera.fieldOfView=view.focusFieldOfView;
                     Assert(view.TryGetFocusPose(out var p,out var q),"No focus pose");camera.transform.SetPositionAndRotation(p,q);
-                    var frame=GameObject.Find("Refined / Monitor").GetComponentsInChildren<Renderer>()
-                        .Where(r=>r.name=="Monitor housing" || r.name.Contains("light shield")).ToArray();
-                    var bounds=frame[0].bounds;foreach(var r in frame.Skip(1))bounds.Encapsulate(r.bounds);
-                    var a=camera.WorldToViewportPoint(bounds.min);
-                    var b=camera.WorldToViewportPoint(new Vector3(bounds.max.x,bounds.max.y,bounds.min.z));
-                    Assert(Mathf.Abs(Mathf.Max(b.x-a.x,b.y-a.y)-.8f)<.005f,"Screen occupancy differs from 80% at "+ratio);
-                    Assert(a.x>.09f&&a.y>.09f&&b.x<.91f&&b.y<.91f,"Screen clipped at "+ratio);
-                    if(Mathf.Abs(ratio-16f/9f)<.01f)Capture(camera,"monitor-focus");
+                    var display=surface.screenCollider.transform;
+                    var a=camera.WorldToViewportPoint(display.TransformPoint(new Vector3(-.5f,-.5f,0)));
+                    var b=camera.WorldToViewportPoint(display.TransformPoint(new Vector3(.5f,.5f,0)));
+                    Assert(Mathf.Abs(Mathf.Max(b.x-a.x,b.y-a.y)-.92f)<.005f,"Usable OS screen does not fill 92% of limiting axis at "+ratio);
+                    Assert(a.x>.039f&&a.y>.039f&&b.x<.961f&&b.y<.961f,"Usable OS screen clipped at "+ratio);
+                    if(Mathf.Abs(ratio-16f/9f)<.01f)
+                    {
+                        float area=(b.x-a.x)*(b.y-a.y);
+                        Assert(area>=.80f && Mathf.Abs(area-.8464f)<.005f,"OS display must occupy at least 80% of the 16:9 viewport area");
+                        Debug.Log("OS_DISPLAY_AREA_PASS: "+(area*100).ToString("F2")+" percent of the 16:9 viewport, excluding bezel and shields");
+                        Capture(camera,"monitor-focus");
+                    }
                 }
             }
             finally {camera.aspect=aspect;camera.fieldOfView=fov;camera.transform.SetPositionAndRotation(pos,rot);}
-            Debug.Log("ROOM_FOCUS_PASS: 80 percent screen framing at 16:9, 4:3, 21:9, 9:16; physical camera approach; input enabled only after transition");
+            Debug.Log("ROOM_FOCUS_PASS: usable display fills 92% of limiting axis at 16:9, 4:3, 21:9, 9:16; 84.64% viewport area at 16:9; physical approach; input enabled only after transition");
         }
         public static void CheckReturned(MonitorSurface surface,PortfolioDesktop desktop)
         {
@@ -79,7 +83,7 @@ namespace PrGame.Editor
             Assert(Quaternion.Angle(surface.viewCamera.transform.rotation,seatedRotation)<.3f,"Room orientation was not restored");
             Assert(surface.ScreenToPanel(new Vector2(Screen.width/2f,Screen.height/2f)).x<0,"Room mode accepted pointer");
             Assert(desktop.GetWindow("notes")!=null,"Looking away closed note window");
-            File.WriteAllText("Logs/OSQA/room-results.txt","PASS: room starts outside computer mode; floor-plan landmarks and east/right window; supported PBR/contact-shadow shaders; physical approach; 80% framing at 16:9, 4:3, 21:9 and 9:16; gated OS input; return to seat; typing focus released; note window preserved.\n");
+            File.WriteAllText("Logs/OSQA/room-results.txt","PASS: room starts outside computer mode; floor-plan landmarks and east/right window; supported PBR/contact-shadow shaders; physical approach; usable OS display fills 92% of limiting axis at 16:9, 4:3, 21:9 and 9:16; 84.64% viewport area at 16:9 (bezel/shields excluded); gated OS input; return to seat; typing focus released; note window preserved.\n");
             Debug.Log("PR_GAME_ROOM_VIEW_VERIFIED");
         }
         static void Capture(Camera camera,string name)
