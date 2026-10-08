@@ -50,14 +50,9 @@ namespace PrGame
             var files=(trash ? Files.Data.files.Where(f=>f.deleted) : Files.Children(currentFolder)).Where(f=>f.name.IndexOf(explorerSearch?.value??"",StringComparison.OrdinalIgnoreCase)>=0).ToArray();
             foreach(var file in files)
             {
-                var item=Btn(fileGrid,"",()=>SelectExplorerFile(file.id),"file-item", "File-"+file.id);
+                var item=FileButton(fileGrid,file,"explorer:"+currentFolder,()=>SelectExplorerFile(file.id),"file-item", "File-"+file.id);
                 Icon(item,file.folder?"folder":"file-text","file-icon");var text=El(item,"file-caption");Text(text,file.name);Text(text,file.folder?"폴더":"텍스트 문서","muted small");
                 item.EnableInClassList("selected",selectedFile==file.id);
-                item.RegisterCallback<PointerDownEvent>(evt=>
-                {
-                    if(evt.button==0 && evt.clickCount==2){if(trash)Files.Restore(file.id);else OpenVirtualFile(file.id);evt.StopPropagation();}
-                    if(evt.button==1){selectedFile=file.id;ShowFileContext(evt.position,file);evt.StopPropagation();}
-                });
             }
             if(files.Length==0)Text(fileGrid,trash?"휴지통이 비어 있어요.":"파일이 없어요.","empty-caption");
             explorerStatus.text=files.Length+"개 항목"+(selectedFile!=null&&Files.Get(selectedFile)!=null?" · "+Files.Get(selectedFile).name+" 선택됨":"");
@@ -136,7 +131,8 @@ namespace PrGame
             noteBody=InputField(editor,"NoteBody","여기에 내용을 입력하세요.",true);noteBody.AddToClassList("note-body");
             noteBody.verticalScrollerVisibility=ScrollerVisibility.Auto;
             noteBody.RegisterValueChangedCallback(evt=>{if(editingNote!=null)Files.Write(editingNote,evt.newValue);});
-            noteStatus=Text(parent,"자동 저장됨","statusbar");SelectNote(noteId??Files.Notes.FirstOrDefault()?.id);RefreshNoteList();
+            noteStatus=Text(parent,"","statusbar note-file-status");noteStatus.name="NoteStatus";
+            SelectNote(noteId??Files.Notes.FirstOrDefault()?.id);RefreshNoteList();
         }
         public void NewNote()
         {
@@ -145,9 +141,19 @@ namespace PrGame
         void SelectNote(string id)
         {
             if(noteBody==null)return;
-            var file=Files.Get(id);noteId=file?.id;editingNote=noteId;
+            if(noteId!=id)SaveNoteTitle();
+            var file=Files.Get(id);if(file!=null&&(file.folder||Files.IsDeleted(file)))file=null;
+            noteId=file?.id;editingNote=noteId;
             noteTitle.SetValueWithoutNotify(file==null?"":Path.GetFileNameWithoutExtension(file.name));noteBody.SetValueWithoutNotify(file?.content??"");
-            noteTitle.SetEnabled(file!=null);noteBody.SetEnabled(file!=null);RefreshNoteList();
+            noteTitle.SetEnabled(file!=null);noteBody.SetEnabled(file!=null);RefreshNoteList();RefreshNoteStatus();
+        }
+        void RefreshNoteStatus(string state=null)
+        {
+            if(noteStatus==null)return;
+            var file=Files.Get(noteId);
+            noteStatus.tooltip=file==null ? "" : Files.PathOf(file)+" › "+file.name;
+            noteStatus.text=file==null ? "메모를 선택하거나 새로 만들어 주세요." :
+                (state??(Files.Dirty?"저장 중…":"자동 저장됨"))+" · "+noteStatus.tooltip;
         }
         void RefreshNoteList()
         {
@@ -159,7 +165,8 @@ namespace PrGame
         }
         void SaveNoteTitle()
         {
-            if(noteId==null || noteTitle==null)return;
+            var file=Files.Get(noteId);
+            if(file==null || Files.IsDeleted(file) || noteTitle==null)return;
             string title=noteTitle.text.Trim();if(title.Length==0)return;
             if(!title.EndsWith(".txt",StringComparison.OrdinalIgnoreCase))title+=".txt";
             if(Files.Get(noteId)?.name!=title)Safely(()=>Files.Rename(noteId,title));
@@ -190,7 +197,7 @@ namespace PrGame
                     var saved=existing??Files.Create(parent,name);Files.Write(saved.id,source.content);
                     if(!Files.Save())throw new IOException(Files.LastError);
                     SelectNote(saved.id);CloseDialog();Notify("파일 저장 완료",saved.name+" · "+Files.Get(parent).name);
-                    noteStatus.text="저장됨 · "+Files.PathOf(saved)+" › "+saved.name;
+                    RefreshNoteStatus("저장됨");
                 }
                 catch(Exception e){error.text=e.Message;}
             };

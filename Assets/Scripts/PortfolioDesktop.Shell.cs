@@ -195,17 +195,22 @@ namespace PrGame
             if(evt.ctrlKey && evt.keyCode==KeyCode.S)
             {
                 if(evt.shiftKey)ShowSaveNoteDialog();
-                else{SaveNoteTitle();Files.Save();if(noteStatus!=null)noteStatus.text=Files.LastError??"자동 저장됨";}
+                else{SaveNoteTitle();Files.Save();RefreshNoteStatus(Files.LastError??"자동 저장됨");}
                 evt.StopPropagation();return;
             }
             if(IsTyping)return;
+            var fileButton=FileButtonAt(evt.target as VisualElement);
+            if((evt.keyCode==KeyCode.Return||evt.keyCode==KeyCode.KeypadEnter)&&fileButton!=null)
+            {
+                ActivateFile(fileButton.userData as string);evt.StopImmediatePropagation();return;
+            }
             if(evt.ctrlKey && evt.altKey && windows.TryGetValue(activeApp,out var w))
             {if(evt.keyCode==KeyCode.LeftArrow)w.Snap(false);if(evt.keyCode==KeyCode.RightArrow)w.Snap(true);}
             if(activeApp=="explorer")
             {
                 if(evt.keyCode==KeyCode.F2)RenameSelected();
                 if(evt.keyCode==KeyCode.Delete)DeleteSelected();
-                if(evt.keyCode==KeyCode.Return && selectedFile!=null)OpenVirtualFile(selectedFile);
+                if(evt.keyCode==KeyCode.Return && selectedFile!=null)ActivateFile(selectedFile);
                 if(evt.ctrlKey && evt.keyCode==KeyCode.C){clipboard=selectedFile;cutClipboard=false;}
                 if(evt.ctrlKey && evt.keyCode==KeyCode.X){clipboard=selectedFile;cutClipboard=true;}
                 if(evt.ctrlKey && evt.keyCode==KeyCode.V)PasteFile();

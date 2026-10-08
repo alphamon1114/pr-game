@@ -15,6 +15,7 @@ namespace PrGame
         public DesktopCursor Pointer { get; private set; }
         public void SuspendInput()
         {
+            ResetFileClick();
             // Preserve windows and notes, but release typing and active drags.
             var panel = desktop?.panel;
             panel?.focusController?.focusedElement?.Blur();
@@ -42,6 +43,9 @@ namespace PrGame
         bool saveFailed;
         string activeApp="", currentFolder="documents", selectedFile, noteId, clipboard;
         bool cutClipboard;
+        string lastClickedFile, lastClickedView;
+        Vector2 lastFileClickPosition;
+        double lastFileClickTime;
         static readonly string[] AppIds={"explorer","browser","notes","settings"};
         static readonly string[] AppNames={"파일 탐색기","브라우저","메모","설정"};
         static readonly string[] AppIcons={"folder","globe","notebook-pen","settings-2"};
@@ -76,6 +80,7 @@ namespace PrGame
             BuildStartMenu();BuildSearch();BuildNotifications();BuildLockScreen();
             desktop.RegisterCallback<PointerDownEvent>(evt=>
             {
+                if(FileButtonAt(evt.target as VisualElement)==null)ResetFileClick();
                 if(evt.button==0 && !IsInside(evt.target as VisualElement,overlayLayer) && !IsInside(evt.target as VisualElement,islandWrap)) ClosePopups();
                 if(evt.button==1 && !locked && (evt.target==desktop || evt.target==windowLayer))
                 { ShowDesktopContext(evt.position);evt.StopPropagation(); }
@@ -93,7 +98,7 @@ namespace PrGame
             if(Files!=null && Files.Dirty && Time.unscaledTime>=saveAt && !saveFailed)
             {
                 saveFailed=!Files.Save();
-                if(noteStatus!=null)noteStatus.text=saveFailed ? "저장 실패 · 다시 저장해 주세요" : "자동 저장됨";
+                RefreshNoteStatus(saveFailed ? "저장 실패 · 다시 저장해 주세요" : "자동 저장됨");
                 if(saveFailed)Notify("저장 실패",Files.LastError);
             }
         }
@@ -101,6 +106,7 @@ namespace PrGame
         void OnApplicationQuit() { SaveNoteTitle();if(Files?.Dirty==true)Files.Save(); }
         void OnDisable()
         {
+            ResetFileClick();
             Pointer?.Dispose();Pointer=null;
             if(Files!=null){SaveNoteTitle();Files.Changed-=OnFilesChanged;if(Files.Dirty)Files.Save();}
             windows.Clear();appButtons.Clear();notifications.Clear();browserTabs.Clear();
@@ -112,7 +118,7 @@ namespace PrGame
             if(noteId!=null && (Files.Get(noteId)==null || Files.IsDeleted(Files.Get(noteId))))SelectNote(null);
             else if(noteId!=null && noteTitle!=null && !IsInside(desktop.panel?.focusController?.focusedElement as VisualElement,noteTitle))
                 noteTitle.SetValueWithoutNotify(System.IO.Path.GetFileNameWithoutExtension(Files.Get(noteId).name));
-            if(noteStatus!=null)noteStatus.text="저장 중…";
+            RefreshNoteStatus("저장 중…");
         }
         void UpdateClock()
         {
@@ -139,10 +145,65 @@ namespace PrGame
         public DesktopWindow GetWindow(string id) => windows.TryGetValue(id,out var w) ? w : null;
         public void OpenVirtualFile(string id)
         {
+            if(locked)return;
             var file=Files.Get(id);if(file==null || Files.IsDeleted(file))return;
+            ResetFileClick();
             selectedFile=id;
-            if(file.folder){selectedFile=null;currentFolder=id;OpenApp("explorer");RefreshExplorer();}
-            else {OpenApp("notes");SelectNote(id);}
+            if(file.folder)
+            {
+                selectedFile=null;currentFolder=id;OpenApp("explorer");
+                explorerSearch.SetValueWithoutNotify("");RefreshExplorer();
+            }
+            else
+            {
+                // Current virtual documents are text files. Resolve their stable ID,
+                // not a filename, so moving/renaming never opens a different copy.
+                OpenApp("notes");SelectNote(file.id);
+                windows["notes"].Content.RemoveFromClassList("show-note-list");
+            }
+        }
+        void ActivateFile(string id)
+        {
+            if(locked)return;
+            ResetFileClick();
+            var file=Files.Get(id);if(file==null)return;
+            if(file.deleted&&currentFolder=="trash")Files.Restore(id);
+            else OpenVirtualFile(id);
+        }
+        void ResetFileClick(){lastClickedFile=null;lastClickedView=null;}
+        static Button FileButtonAt(VisualElement target)
+        {
+            for(var element=target;element!=null;element=element.parent)
+                if(element is Button button && button.ClassListContains("file-launcher"))return button;
+            return null;
+        }
+        Button FileButton(VisualElement parent,DesktopFile file,string view,Action select,string classes,string name)
+        {
+            var button=Btn(parent,"",null,classes+" file-launcher",name);
+            button.userData=file.id;button.tooltip=Files.PathOf(file)+" › "+file.name;
+            // Button's Clickable consumes PointerDown. Handle completed clicks instead,
+            // also covering runtime panels that do not supply an OS double-click count.
+            button.clickable.clickedWithEventInfo+=evt=>
+            {
+                if(locked)return;
+                Vector2 position;
+                if(evt is IPointerEvent pointer)position=pointer.position;
+                else if(evt is IMouseEvent mouse)position=mouse.mousePosition;
+                else {select();ActivateFile(file.id);return;}
+                double now=Time.realtimeSinceStartupAsDouble;
+                bool twice=lastClickedFile==file.id && lastClickedView==view &&
+                    now-lastFileClickTime<=.5 && Vector2.SqrMagnitude(position-lastFileClickPosition)<=64;
+                lastClickedFile=file.id;lastClickedView=view;lastFileClickTime=now;lastFileClickPosition=position;
+                select();if(twice)ActivateFile(file.id);
+            };
+            button.RegisterCallback<PointerDownEvent>(evt=>
+            {
+                if(evt.button!=1||locked)return;
+                ResetFileClick();select();var current=Files.Get(file.id);
+                if(current!=null)ShowFileContext(evt.position,current);
+                evt.StopPropagation();
+            },TrickleDown.TrickleDown);
+            return button;
         }
         void FocusApp(string id)
         {
@@ -159,13 +220,9 @@ namespace PrGame
             if(desktopFiles==null)return;desktopFiles.Clear();
             foreach(var file in Files.Children("desktop"))
             {
-                var button=Btn(desktopFiles,"",()=>{selectedFile=file.id;desktopFiles.Query<Button>().ForEach(b=>b.EnableInClassList("selected",b.name=="DesktopFile-"+file.id));},"desktop-shortcut","DesktopFile-"+file.id);
+                var button=FileButton(desktopFiles,file,"desktop",()=>{selectedFile=file.id;desktopFiles.Query<Button>().ForEach(b=>b.EnableInClassList("selected",b.name=="DesktopFile-"+file.id));},"desktop-shortcut","DesktopFile-"+file.id);
+                button.EnableInClassList("selected",selectedFile==file.id);
                 Icon(button,file.folder?"folder":"file-text","shortcut-plate");Text(button,file.name,"desktop-file-name");
-                button.RegisterCallback<PointerDownEvent>(evt=>
-                {
-                    if(evt.button==0&&evt.clickCount==2){OpenVirtualFile(file.id);evt.StopPropagation();}
-                    if(evt.button==1){selectedFile=file.id;ShowFileContext(evt.position,file);evt.StopPropagation();}
-                });
             }
         }
         public static VisualElement El(VisualElement parent,string classes="",string name=null)

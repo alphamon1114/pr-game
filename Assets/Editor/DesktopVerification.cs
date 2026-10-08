@@ -15,6 +15,7 @@ namespace PrGame.Editor
         static double next;
         static int step;
         static string createdId;
+        static bool fileActivationVerified;
         static string SaveDirectory => Path.GetFullPath("Logs/OSQA/State-"+SessionState.GetString("PrGame.OSRun","default"));
         static DesktopVerification()
         {
@@ -63,6 +64,16 @@ namespace PrGame.Editor
                     Assert(!surface.seatedView.CanInteractWithComputer,"OS accepted input during approach");next+=2;step=1;return;
                 }
                 var root=os.Root;
+                if(step==28&&!fileActivationVerified)
+                {
+                    fileActivationVerified=DesktopFileActivationVerification.Tick(os);
+                    if(fileActivationVerified)
+                    {
+                        Capture(surface,"21-file-opened");
+                        os.OpenApp("explorer");DesktopCursorVerification.PointAt(os,surface,new Vector2(1190,625));
+                    }
+                    return;
+                }
                 switch(step)
                 {
                     case 1:

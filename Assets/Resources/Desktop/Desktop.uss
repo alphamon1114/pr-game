@@ -155,6 +155,7 @@ Label { margin: 0; padding: 0; flex-shrink: 0; -unity-text-align: middle-left; o
 .preview-pane .heading { font-size: 17px; margin-bottom: 10px; }
 .preview-text { margin-top: 18px; font-size: 13px; }
 .statusbar { height: 29px; padding: 6px 16px; border-top-width: 1px; border-top-color: var(--line); font-size: 11px; color: var(--muted); }
+.note-file-status { flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .empty-caption { margin: 35px; color: var(--muted); font-size: 14px; }
 .notes-sidebar { width: 200px; padding: 12px; background-color: var(--side); border-right-width: 1px; border-right-color: var(--line); }
 .note-list { margin-top: 14px; }
