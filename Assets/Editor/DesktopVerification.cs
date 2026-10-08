@@ -57,7 +57,9 @@ namespace PrGame.Editor
                 if(step==0){next+=6;step=-1;return;}
                 if(step==-1)
                 {
+                    DesktopCursorVerification.CheckInactive(os);
                     RoomViewVerification.CheckRoom(surface);surface.seatedView.EnterComputer();
+                    DesktopCursorVerification.CheckInactive(os);
                     Assert(!surface.seatedView.CanInteractWithComputer,"OS accepted input during approach");next+=2;step=1;return;
                 }
                 var root=os.Root;
@@ -133,10 +135,26 @@ namespace PrGame.Editor
                     case 27:
                         Assert(Math.Abs(os.GetWindow("explorer").resolvedStyle.left-SessionState.GetFloat("PrGame.OSBeforeX",0)-50)<3,"Window title drag failed");
                         File.WriteAllText("Logs/OSQA/results.txt","PASS: storage/recovery; monitor fit and 5 ray coordinates; off-screen input; pointer start/app launch; notes and live search; rename/delete/restore; browser tabs/history; window maximize/restore/resize; island hide/reveal; themes; per-card notification dismissal; lock/session restore; Save As filename/folder; saved-file search/explorer and persistence.\n");
-                        Debug.Log("PR_GAME_OS_VERIFIED");os.OpenApp("notes");root.Q<TextField>("NoteBody").Focus();
-                        surface.seatedView.LeaveComputer();next+=2;break;
+                        Debug.Log("PR_GAME_OS_VERIFIED");os.OpenApp("explorer");
+                        DesktopCursorVerification.PointAt(os,surface,new Vector2(1190,625));break;
                     case 28:
-                        RoomViewVerification.CheckReturned(surface,os);Finish(0);return;
+                        DesktopCursorVerification.CheckArrowHotspot(os);Capture(surface,"16-cursor-arrow");
+                        DesktopCursorVerification.PointAt(os,surface,root.Q<Button>("StartButton"));DesktopCursorVerification.CheckShape(os,DesktopCursorShape.Link);break;
+                    case 29:
+                        Capture(surface,"17-cursor-link");os.OpenApp("notes");
+                        DesktopCursorVerification.PointAt(os,surface,root.Q<TextField>("NoteBody"));DesktopCursorVerification.CheckShape(os,DesktopCursorShape.Text);break;
+                    case 30:
+                        Capture(surface,"18-cursor-text");os.SetTheme("sage");DesktopCursorVerification.PointAt(os,surface,new Vector2(1190,625));
+                        Assert(os.Pointer.IsSage,"Cursor did not follow sage theme");break;
+                    case 31:
+                        Capture(surface,"19-cursor-sage");os.SetTheme("silver");os.OpenApp("explorer");
+                        DesktopCursorVerification.PointAt(os,surface,os.GetWindow("explorer").Q("explorer-resize-10"));
+                        DesktopCursorVerification.CheckShape(os,DesktopCursorShape.DiagonalDown);Assert(!os.Pointer.IsSage,"Cursor did not return to silver palette");break;
+                    case 32:
+                        Capture(surface,"20-cursor-resize");DesktopCursorVerification.CheckResizeAndHide(os,surface);
+                        os.OpenApp("notes");root.Q<TextField>("NoteBody").Focus();surface.seatedView.LeaveComputer();next+=2;break;
+                    case 33:
+                        RoomViewVerification.CheckReturned(surface,os);DesktopCursorVerification.CheckReturned(os);Finish(0);return;
                 }
                 step++;
             }

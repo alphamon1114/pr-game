@@ -12,6 +12,7 @@ namespace PrGame
         public DesktopFileSystem Files { get; private set; }
         public VisualElement Root => desktop;
         public bool IsLocked => locked;
+        public DesktopCursor Pointer { get; private set; }
         public void SuspendInput()
         {
             // Preserve windows and notes, but release typing and active drags.
@@ -83,7 +84,10 @@ namespace PrGame
             desktop.RegisterCallback<GeometryChangedEvent>(_=>{foreach(var w in windows.Values)w.ClampToDesktop();});
             desktop.schedule.Execute(UpdateClock).Every(1000);UpdateClock();
             if(!string.IsNullOrEmpty(Files.LastError)) Notify("저장 상태",Files.LastError);
+            Pointer=new DesktopCursor(desktop,GetComponent<MonitorSurface>());
         }
+        void LateUpdate(){Pointer?.UpdateFromInput();}
+        void OnApplicationFocus(bool focused){if(!focused)Pointer?.Update(Input.mousePosition,false);}
         void Update()
         {
             if(Files!=null && Files.Dirty && Time.unscaledTime>=saveAt && !saveFailed)
@@ -97,6 +101,7 @@ namespace PrGame
         void OnApplicationQuit() { SaveNoteTitle();if(Files?.Dirty==true)Files.Save(); }
         void OnDisable()
         {
+            Pointer?.Dispose();Pointer=null;
             if(Files!=null){SaveNoteTitle();Files.Changed-=OnFilesChanged;if(Files.Dirty)Files.Save();}
             windows.Clear();appButtons.Clear();notifications.Clear();browserTabs.Clear();
         }

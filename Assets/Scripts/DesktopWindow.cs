@@ -9,6 +9,8 @@ namespace PrGame
         public VisualElement Content { get; }
         public bool Maximized { get; private set; }
         public bool Minimized { get; private set; }
+        public bool IsPointerGestureActive => dragging;
+        public int PointerGestureEdges => edges;
         public event Action Focused, Changed, Closed;
         readonly Func<Vector2> desktopSize;
         Rect normalRect;
