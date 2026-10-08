@@ -6,6 +6,12 @@ using UnityEngine;
 
 namespace PrGame
 {
+    public static class DesktopBrowserDefaults
+    {
+        public const string HomeUrl = "https://www.naver.com/";
+        public const string VarcoUrl = "https://3d.varco.ai/explore";
+    }
+
     [Serializable]
     public sealed class DesktopFile
     {
@@ -20,6 +26,7 @@ namespace PrGame
         public int version = 1;
         public string theme = "silver";
         public bool doNotDisturb;
+        public int browserDefaultsVersion;
         public List<DesktopFile> files = new List<DesktopFile>();
         public List<string> history = new List<string>();
         public List<string> bookmarks = new List<string>();
@@ -39,6 +46,14 @@ namespace PrGame
         {
             savePath = Path.Combine(directory ?? OverrideDirectory ?? Path.Combine(Application.persistentDataPath, "Desktop"), "session-v1.json");
             Data = Read(savePath) ?? Read(savePath + ".bak") ?? Seed();
+            // Apply once to existing saves too, without restoring a bookmark the player later removes.
+            if (Data.browserDefaultsVersion < 1)
+            {
+                if (!Data.bookmarks.Any(url => url?.TrimEnd('/') == DesktopBrowserDefaults.VarcoUrl))
+                    Data.bookmarks.Add(DesktopBrowserDefaults.VarcoUrl);
+                Data.browserDefaultsVersion = 1;
+                Dirty = true;
+            }
         }
 
         DesktopSave Read(string path)

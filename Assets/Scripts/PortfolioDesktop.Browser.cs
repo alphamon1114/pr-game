@@ -10,7 +10,8 @@ namespace PrGame
     {
         sealed class BrowserTab
         {
-            public readonly List<string> entries=new List<string>{"local://newtab"};
+            public readonly List<string> entries;
+            public BrowserTab(string initialUrl="local://newtab"){entries=new List<string>{initialUrl};}
             public int index;public string Url=>entries[index];
             public string title="",error="";
             public bool navigating;
@@ -18,7 +19,7 @@ namespace PrGame
         }
         readonly List<BrowserTab> browserTabs=new List<BrowserTab>();
         int browserTabIndex;
-        VisualElement tabStrip,browserPage,browserSide,browserViewport;
+        VisualElement tabStrip,browserPage,browserSide,browserViewport,browserBookmarks;
         ScrollView browserScroll;
         Label browserStatus;
         Button browserBack,browserForward;
@@ -27,17 +28,17 @@ namespace PrGame
         string sideMode;
         void BuildBrowser(VisualElement parent)
         {
-            if(browserTabs.Count==0)browserTabs.Add(new BrowserTab());
+            if(browserTabs.Count==0)browserTabs.Add(new BrowserTab(DesktopBrowserDefaults.HomeUrl));
             tabStrip=El(parent,"browser-tabs");
             var nav=El(parent,"toolbar browser-nav");
             browserBack=IconBtn(nav,"arrow-left","뒤로",()=>BrowseHistory(-1),"","BrowserBack");
             browserForward=IconBtn(nav,"arrow-right","앞으로",()=>BrowseHistory(1),"","BrowserForward");
-            IconBtn(nav,"rotate-cw","새로 고침",ReloadBrowser,"","BrowserReload");IconBtn(nav,"house","홈",()=>Navigate("local://newtab"));
+            IconBtn(nav,"rotate-cw","새로 고침",ReloadBrowser,"","BrowserReload");IconBtn(nav,"house","홈",()=>Navigate(DesktopBrowserDefaults.HomeUrl),"","BrowserHome");
             address=InputField(nav,"BrowserAddress","검색 또는 주소 입력");address.AddToClassList("omnibox");
             address.RegisterCallback<KeyDownEvent>(evt=>{if(evt.keyCode==UnityEngine.KeyCode.Return){Navigate(address.value);evt.StopPropagation();}});
-            IconBtn(nav,"star","북마크",()=>{string url=browserTabs[browserTabIndex].Url;if(Files.Data.bookmarks.Contains(url))Files.Data.bookmarks.Remove(url);else Files.Data.bookmarks.Add(url);Files.Touch();RenderBrowserSide();});
+            IconBtn(nav,"star","북마크",()=>{string url=browserTabs[browserTabIndex].Url;if(Files.Data.bookmarks.Contains(url))Files.Data.bookmarks.Remove(url);else Files.Data.bookmarks.Add(url);Files.Touch();RenderBrowserBookmarks();RenderBrowserSide();});
             IconBtn(nav,"notebook-pen","메모 열기",()=>OpenApp("notes"));
-            var bookmarks=El(parent,"bookmarks row");Btn(bookmarks,"문서",()=>Navigate("local://documents"),"text-button");Btn(bookmarks,"보관함",()=>Navigate("local://archive"),"text-button");
+            browserBookmarks=El(parent,"bookmarks row","BrowserBookmarks");browserBookmarks.style.overflow=Overflow.Hidden;RenderBrowserBookmarks();
             var body=El(parent,"app-layout grow");browserViewport=El(body,"browser-viewport grow");
             browserScroll=new ScrollView();browserScroll.style.flexGrow=1;browserViewport.Add(browserScroll);browserPage=El(browserScroll,"browser-page");
             browserSide=El(body,"browser-side");Visible(browserSide,false);
@@ -86,7 +87,15 @@ namespace PrGame
             else RenderBrowser();
         }
         static string PageTitle(string url)
-        {switch(url){case "local://newtab":return "새 탭";case "local://documents":return "문서";case "local://archive":return "보관함";case "local://history":return "방문 기록";default:return url;}}
+        {switch(url.TrimEnd('/')){case "https://www.naver.com":return "네이버";case DesktopBrowserDefaults.VarcoUrl:return "VARCO 3D";case "local://newtab":return "새 탭";case "local://documents":return "문서";case "local://archive":return "보관함";case "local://history":return "방문 기록";default:return url;}}
+        void RenderBrowserBookmarks()
+        {
+            if(browserBookmarks==null)return;browserBookmarks.Clear();
+            foreach(string entry in Files.Data.bookmarks.ToArray())
+            {
+                string url=entry;var button=Btn(browserBookmarks,PageTitle(url),()=>Navigate(url),"text-button");button.tooltip=url;
+            }
+        }
         void RenderBrowser(bool loadWeb=true)
         {
             if(browserPage==null)return;RenderBrowserTabs();browserPage.Clear();
@@ -225,7 +234,7 @@ namespace PrGame
             foreach(string entry in entries.ToArray())
             {
                 string route=entry;var row=El(scroll,"history-entry row");Btn(row,PageTitle(route),()=>Navigate(route),"grow text-button");
-                IconBtn(row,"x","기록 삭제",()=>{entries.Remove(route);Files.Touch();RenderBrowserSide();});
+                IconBtn(row,"x","기록 삭제",()=>{entries.Remove(route);Files.Touch();RenderBrowserBookmarks();RenderBrowserSide();});
             }
             if(sideMode=="history")Btn(browserSide,"전체 기록 보기",()=>Navigate("local://history"),"soft-button");
         }

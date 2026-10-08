@@ -46,6 +46,16 @@ namespace PrGame.Editor
             Assert(reload.Get(file.id).content==file.content&&reload.Data.theme=="sage","Persistence mismatch");
             reload.Write(file.id,"두 번째 저장");reload.Save();File.WriteAllText(Path.Combine(directory,"session-v1.json"),"{broken");
             var recovery=new DesktopFileSystem(directory);Assert(recovery.Get(file.id)?.content==file.content,"Backup recovery failed");
+            // Simulate an older save with a personal bookmark, then persist a deliberate deletion.
+            recovery.Data.browserDefaultsVersion=0;recovery.Data.bookmarks.Clear();recovery.Data.bookmarks.Add("https://example.com/");recovery.Save();
+            var upgraded=new DesktopFileSystem(directory);
+            Assert(upgraded.Data.bookmarks.SequenceEqual(new[]{"https://example.com/",DesktopBrowserDefaults.VarcoUrl}),"Bookmark upgrade lost existing data or omitted VARCO");
+            Assert(upgraded.Get(file.id)?.content==file.content&&upgraded.Data.theme=="sage","Bookmark upgrade changed saved files or theme");
+            upgraded.Data.browserDefaultsVersion=0;upgraded.Save();upgraded=new DesktopFileSystem(directory);
+            Assert(upgraded.Data.bookmarks.Count(url=>url==DesktopBrowserDefaults.VarcoUrl)==1,"Bookmark upgrade duplicated VARCO");
+            upgraded.Data.bookmarks.Remove(DesktopBrowserDefaults.VarcoUrl);upgraded.Save();
+            Assert(!new DesktopFileSystem(directory).Data.bookmarks.Contains(DesktopBrowserDefaults.VarcoUrl),"Removed bookmark returned on reload");
+            Debug.Log("OS_BROWSER_DEFAULTS_PASS: legacy bookmark migration, existing data preserved, no duplicates, deletion retained");
             Debug.Log("OS_STORAGE_PASS: create, rename, recursive copy/move, cycle rejection, trash, restore, Korean persistence, backup recovery");
         }
         static void Tick()

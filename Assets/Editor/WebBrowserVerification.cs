@@ -13,7 +13,7 @@ namespace PrGame.Editor
 {
     public static class WebBrowserVerification
     {
-        static int step;
+        static int step=-1;
         static double deadline;
         static TcpListener server;
         static string origin;
@@ -26,15 +26,19 @@ namespace PrGame.Editor
         static void Evaluate(WebBrowserPage page,string key,string script){answers.Remove(key);page.Send(new WebCommand{type="evaluate",request=key,text=script});}
         public static bool Tick(PortfolioDesktop os,MonitorSurface surface,Action<string> capture)
         {
-            if(step>0&&EditorApplication.timeSinceStartup>deadline)throw new Exception("Web QA timed out at "+step+": "+os.Root.Q<Label>("BrowserStatus")?.text);
+            if(step>=0&&EditorApplication.timeSinceStartup>deadline)throw new Exception("Web QA timed out at "+step+": "+os.Root.Q<Label>("BrowserStatus")?.text);
             var root=os.Root;var view=root.Q<WebBrowserView>();
             switch(step)
             {
+                case -1:
+                    os.OpenApp("browser");Assert(root.Q<TextField>("BrowserAddress").value==DesktopBrowserDefaults.HomeUrl,"Browser did not start at Naver");Advance();break;
                 case 0:
+                    if(!Loaded(view,DesktopBrowserDefaults.HomeUrl))return false;
+                    capture("24-naver-home");
                     Assert(PortfolioDesktop.NormalizeBrowserAddress("조건희 포트폴리오").StartsWith("https://www.google.com/search?q="),"Search did not become HTTPS URL");
                     Assert(PortfolioDesktop.NormalizeBrowserAddress("example.com")=="https://example.com/","Bare domain normalization failed");
                     Assert(PortfolioDesktop.NormalizeBrowserAddress("file:///C:/Windows").StartsWith("https://www.google.com/search?q="),"Local file scheme was allowed");
-                    StartFixture();os.OpenApp("browser");os.Navigate("https://example.com/");Advance();break;
+                    StartFixture();os.Navigate("https://example.com/");Advance();break;
                 case 1:
                     if(!Loaded(view,"https://example.com/"))return false;
                     Assert(view.Page.Texture.width>600,"Web texture was not uploaded to Unity");
@@ -84,9 +88,15 @@ namespace PrGame.Editor
                     os.Lock();Assert(!view.HasKeyboardFocus,"Lock retained browser focus");os.Unlock();Advance();break;
                 case 15:
                     Click(root.Q<Button>("CloseBrowserTab-1"));Assert(root.Query(className:"browser-tab").ToList().Count==1,"Closing background web tab failed");
+                    var bookmark=root.Q("BrowserBookmarks").Query<Button>().ToList().Find(button=>button.text=="VARCO 3D");
+                    Click(bookmark);Assert(root.Q<TextField>("BrowserAddress").value==DesktopBrowserDefaults.VarcoUrl,"VARCO bookmark opened the wrong URL");Advance();break;
+                case 16:
+                    Click(root.Q<Button>("BrowserHome"));Assert(root.Q<TextField>("BrowserAddress").value==DesktopBrowserDefaults.HomeUrl,"Home button did not navigate to Naver");Advance();break;
+                case 17:
+                    if(!Loaded(view,DesktopBrowserDefaults.HomeUrl))return false;
                     os.GetWindow("browser").Close();Assert(root.Q<WebBrowserView>()==null,"Closed browser retained live view");
                     server.Stop();server=null;
-                    File.WriteAllText("Logs/OSQA/web-browser-results.txt","PASS: free CEF 152 / CefSharp 152.0.100; live public HTTPS rendered to monitor; URL/search normalization; local file scheme exclusion; real UI pointer mapping; Unicode Korean text; web button click; scrolling; independent tabs retaining input/scroll; native back/forward; resize/maximize; keyboard focus release and lock; tab/window close. Host smoke test additionally covers IME composition/commit.\n");
+                    File.WriteAllText("Logs/OSQA/web-browser-results.txt","PASS: free CEF 152 / CefSharp 152.0.100; Naver startup and home button; VARCO 3D bookmark navigation; live public HTTPS rendered to monitor; URL/search normalization; local file scheme exclusion; real UI pointer mapping; Unicode Korean text; web button click; scrolling; independent tabs retaining input/scroll; native back/forward; resize/maximize; keyboard focus release and lock; tab/window close. Host smoke test additionally covers IME composition/commit.\n");
                     Debug.Log("PR_GAME_LIVE_WEB_VERIFIED");return true;
             }
             return false;
