@@ -89,12 +89,14 @@ namespace PrGame
             desktop.RegisterCallback<GeometryChangedEvent>(_=>{foreach(var w in windows.Values)w.ClampToDesktop();});
             desktop.schedule.Execute(UpdateClock).Every(1000);UpdateClock();
             if(!string.IsNullOrEmpty(Files.LastError)) Notify("저장 상태",Files.LastError);
+            InitializePower();
             Pointer=new DesktopCursor(desktop,GetComponent<MonitorSurface>());
         }
         void LateUpdate(){TickWebBrowser();Pointer?.UpdateFromInput();}
         void OnApplicationFocus(bool focused){if(!focused)Pointer?.Update(Input.mousePosition,false);}
         void Update()
         {
+            UpdatePower();
             if(Files!=null && Files.Dirty && Time.unscaledTime>=saveAt && !saveFailed)
             {
                 saveFailed=!Files.Save();

@@ -17,6 +17,7 @@ namespace PrGame.Editor
         static string createdId;
         static bool fileActivationVerified;
         static bool webBrowserVerified;
+        static bool powerLoginVerified;
         static string SaveDirectory => Path.GetFullPath("Logs/OSQA/State-"+SessionState.GetString("PrGame.OSRun","default"));
         static DesktopVerification()
         {
@@ -69,6 +70,7 @@ namespace PrGame.Editor
                 if(step==0){next+=6;step=-1;return;}
                 if(step==-1)
                 {
+                    if(!powerLoginVerified){powerLoginVerified=ComputerLoginVerification.Tick(os,surface);return;}
                     RoomViewVerification.CheckFreeLook(surface);
                     RoomPropVerification.Check(surface);
                     DesktopCursorVerification.CheckInactive(os);
@@ -140,7 +142,7 @@ namespace PrGame.Editor
                     case 18:
                         Assert(root.Query(className:"notification-card").ToList().Count==0,"Clear notifications failed");os.Lock();break;
                     case 19:
-                        Assert(os.IsLocked,"Lock failed");Capture(surface,"12-lock");os.Unlock();break;
+                        Assert(os.IsLocked,"Lock failed");Capture(surface,"12-lock");Assert(os.TryLogin("1114"),"Password unlock failed");break;
                     case 20:
                         Assert(!os.IsLocked&&os.GetWindow("settings")!=null,"Unlock lost window session");os.OpenVirtualFile(createdId);break;
                     case 21:Click(root.Q<Button>("SaveNoteFile"));break;
@@ -213,7 +215,7 @@ namespace PrGame.Editor
             else if(type==EventType.MouseUp){using(var e=PointerUpEvent.GetPooled(input))target.SendEvent(e);}
             else {using(var e=PointerMoveEvent.GetPooled(input))target.SendEvent(e);}
         }
-        static void Capture(MonitorSurface surface,string name)
+        internal static void Capture(MonitorSurface surface,string name)
         {
             SaveTexture(surface.screenTexture,"Logs/OSQA/"+name+"-screen.png");
             var target=new RenderTexture(1600,900,24);var camera=surface.viewCamera;var previous=camera.targetTexture;

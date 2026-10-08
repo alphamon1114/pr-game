@@ -85,7 +85,7 @@ namespace PrGame.Editor
                     Assert(Mathf.Abs(view.Page.Texture.height-view.contentRect.height*1.25f)<2,"Web surface did not resize with window");
                     capture("23-live-browser-maximized");Click(root.Q<Button>("browser-maximize"));view.Focus();os.SuspendInput();
                     Assert(!view.HasKeyboardFocus,"Leaving computer did not release browser typing");
-                    os.Lock();Assert(!view.HasKeyboardFocus,"Lock retained browser focus");os.Unlock();Advance();break;
+                    os.Lock();Assert(!view.HasKeyboardFocus,"Lock retained browser focus");Assert(os.TryLogin("1114"),"Password unlock failed");Advance();break;
                 case 15:
                     Click(root.Q<Button>("CloseBrowserTab-1"));Assert(root.Query(className:"browser-tab").ToList().Count==1,"Closing background web tab failed");
                     var bookmark=root.Q("BrowserBookmarks").Query<Button>().ToList().Find(button=>button.text=="VARCO 3D");

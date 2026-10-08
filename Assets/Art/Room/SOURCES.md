@@ -29,3 +29,8 @@ maps are reused on a separate material so that the floor rug is not recolored.
 its rear hinge assembly, and adds a small visible corridor. These are play-time revisions;
 the Blender file and FBX remain the original import baseline. Do not rebuild the whole room merely
 to apply these changes. Restart Play to assemble the updated props.
+
+`FridgePasswordNote.cs` adds original curved pen-stroke geometry spelling 1114 to the existing paper.
+`DeskComputerPower.cs` adds an original circular power switch and symbol to the PC front, and switches
+the existing monitor/keyboard/PC indicator renderers and screen bounce light with the computer state.
+Neither uses an external photograph, handwriting font, generated bitmap or manufacturer mesh.

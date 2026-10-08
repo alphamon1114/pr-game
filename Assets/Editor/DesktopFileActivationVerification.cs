@@ -54,7 +54,9 @@ namespace PrGame.Editor
                     Assert(root.Q<Label>("NoteStatus").tooltip.Contains("다운로드 › 옮긴 자료 › 다시 찾기.txt"),"Renamed/moved path not shown");
                     Assert(os.Files.Save(),os.Files.LastError);
                     // Re-create the OS from disk, preserving only its saved files.
-                    os.enabled=false;os.enabled=true;os.OpenVirtualFile("downloads");return false;
+                    os.enabled=false;os.enabled=true;
+                    Assert(!os.IsPoweredOn&&os.IsLocked,"OS reload bypassed startup power/password gate");
+                    os.PowerOn();step=16;return false;
                 case 6:
                     Assert(os.Files.Get(folderId).parent=="downloads"&&os.Files.Get(nestedId).parent==folderId,"Reload lost stable file/folder location");
                     DoubleClick(os.Root.Q<Button>("File-"+folderId));return false;
@@ -85,7 +87,7 @@ namespace PrGame.Editor
                     using(var key=KeyDownEvent.GetPooled('\n',KeyCode.Return,EventModifiers.None))slow.SendEvent(key);
                     CheckNote(os,"다시 실행해도 같은 위치에 저장되는 메모",nestedId);
                     os.Lock();os.OpenVirtualFile(desktopId);CheckNote(os,"다시 실행해도 같은 위치에 저장되는 메모",nestedId);
-                    os.Unlock();return false;
+                    Assert(os.TryLogin("1114"),"Password unlock failed");return false;
                 case 13:
                     os.ShowSearch("다시 찾기");return false;
                 case 14:
@@ -97,6 +99,10 @@ namespace PrGame.Editor
                 case 15:
                     File.WriteAllText("Logs/OSQA/file-activation-results.txt","PASS: explorer label/icon and desktop double-click; single/different/slow clicks only select; runtime clicks without native double-click count; restore minimized app; folders and stale-filter reset; same-name file isolation; edit original file; folder/file rename and move; OS reload from disk and reopen; right-click Open; list-view Enter; search activation; locked-state guard; visible current path; persisted edits.\n");
                     Debug.Log("PR_GAME_FILE_ACTIVATION_VERIFIED");return true;
+                case 16:
+                    if(os.PowerState==ComputerSessionState.Booting){step=16;return false;}
+                    Assert(os.TryLogin("1114"),"OS reload password login failed");
+                    os.OpenVirtualFile("downloads");step=6;return false;
             }
             return true;
         }

@@ -132,7 +132,7 @@ namespace PrGame
             {
                 // A recapture click only resumes looking; it must not also enter the computer.
                 if (lookReleased) { lookReleased = false; wasLooking = false; }
-                else if (!RoomDoor.TryInteract(view) && monitor && monitor.IsPointerOverMonitor(new Vector2(Screen.width*.5f, Screen.height*.5f))) EnterComputer();
+                else if (!DeskComputerPower.TryInteract(view) && !RoomDoor.TryInteract(view) && monitor && monitor.IsPointerOverMonitor(new Vector2(Screen.width*.5f, Screen.height*.5f))) EnterComputer();
             }
             if (appFocused && !typing && input.homePressed)
             {
@@ -160,7 +160,7 @@ namespace PrGame
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, blend);
             float targetFov = IsFocused ? focusFieldOfView : IsZooming ? Mathf.Min(zoomFieldOfView,defaultFieldOfView) : defaultFieldOfView;
             view.fieldOfView = Mathf.Lerp(view.fieldOfView, targetFov, IsFocused ? blend : 1f-Mathf.Exp(-zoomResponse*deltaTime));
-            SetInteraction(appFocused && IsFocused && !waitForMouseRelease &&
+            SetInteraction(appFocused && IsFocused && (!desktop || desktop.AcceptsScreenInput) && !waitForMouseRelease &&
                 Vector3.Distance(transform.position, targetPosition) < .002f &&
                 Quaternion.Angle(transform.rotation, targetRotation) < .2f && Mathf.Abs(view.fieldOfView-targetFov) < .1f);
 
@@ -178,6 +178,7 @@ namespace PrGame
             if (CanInteractWithComputer == active) return;
             CanInteractWithComputer = active;
             if (!active && desktop) desktop.SuspendInput();
+            else if(active && desktop)desktop.FocusLogin();
         }
 
         void SetLooking(bool active)
@@ -204,9 +205,10 @@ namespace PrGame
         void OnGUI()
         {
             var style = new GUIStyle(GUI.skin.label) { font = helpFont, fontSize = Mathf.Max(12, Screen.height / 65), alignment = TextAnchor.MiddleCenter };
-            string text = IsFocused ? "컴퓨터 조작 중     ·     ESC  방 둘러보기" :
+            string text = IsFocused ? (desktop && !desktop.IsPoweredOn ? "컴퓨터 전원이 꺼져 있어요     ·     ESC  돌아가서 본체 전원 켜기" : "컴퓨터 조작 중     ·     ESC  방 둘러보기") :
                 !IsLooking ? "화면 클릭  둘러보기 재개     ·     F  컴퓨터 사용" :
-                "마우스로 둘러보기     ·     우클릭 누르기  확대     ·     문 / 모니터를 보고 클릭     ·     F  컴퓨터 사용     ·     ESC  마우스 해제";
+                "마우스로 둘러보기     ·     우클릭 누르기  확대     ·     문 / 전원 버튼 / 모니터 클릭     ·     F  컴퓨터 사용     ·     ESC  마우스 해제";
+            if(IsLooking && DeskComputerPower.IsAimedAt(view))text=desktop && desktop.IsPoweredOn ? "컴퓨터가 켜져 있어요     ·     F  컴퓨터 사용" : "클릭  컴퓨터 전원 켜기";
             var rect = new Rect(0, Screen.height-36, Screen.width, 28);
             style.normal.textColor = new Color(0, 0, 0, .85f);
             GUI.Label(new Rect(rect.x+1, rect.y+1, rect.width, rect.height), text, style);

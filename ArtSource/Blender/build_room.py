@@ -118,6 +118,7 @@ box('Fridge door gasket',(-1.70,.52,.876),(.745,.956,.018),rubber,.015)
 box('Fridge door',(-1.70,.52,.858),(.742,.955,.035),ivory,.018)
 rod('Fridge handle',(-1.405,.52,.821),(-1.405,.79,.821),.012,steel)
 for x in [-1.98,-1.43]:box('Fridge foot',(x,.017,1.07),(.065,.034,.066),rubber)
+# FridgePasswordNote.cs adds the handwritten 1114 clue on this paper at play time.
 box('Fridge note',(-1.87,.77,.837),(.12,.10,.0018),paper,.001,yaw=0)
 rod('Note magnet',(-1.87,.80,.833),(-1.87,.80,.837),.008,blue)
 # Northeast wardrobe, two tall doors and recessed handles.
@@ -205,6 +206,7 @@ lathe('Task lamp diffuser',(-.77,1.168,1.29),[(0,0),(.086,0),(.086,.004),(0,.004
 for x in [-.74,.40]:
  box('Speaker cabinet',(x,.858,1.45),(.13,.164,.13),black,.012)
  for y,r in [(.862,.040),(.919,.015)]:rod('Speaker cone',(x,y,1.378),(x,y,1.384),r,rubber)
+# DeskComputerPower.cs adds the front power switch and controls indicator visibility.
 box('PC chassis',(.49,.28,1.28),(.25,.48,.47),black,.014)
 box('PC glass side',(.618,.30,1.27),(.003,.40,.38),darkglass,.002)
 for y in [.17,.35]:

@@ -164,25 +164,33 @@ namespace PrGame
             El(wallpaper,"ribbon ribbon-one").pickingMode=PickingMode.Ignore;El(wallpaper,"ribbon ribbon-two").pickingMode=PickingMode.Ignore;
             Icon(lockScreen,"lock-keyhole","lock-icon");Text(lockScreen,"","lock-time").name="LockTime";Text(lockScreen,"","lock-date").name="LockDate";
             Icon(lockScreen,"user-round","lock-avatar");Text(lockScreen,"조건희","lock-user");
-            Text(lockScreen,"클릭하거나 Enter 키를 눌러 계속","lock-hint");
+            var login=El(lockScreen,"login-form");
+            var row=El(login,"login-row row");
+            loginPassword=InputField(row,"LoginPassword","비밀번호");loginPassword.isPasswordField=true;loginPassword.maxLength=32;
+            loginPassword.AddToClassList("login-password");
+            IconBtn(row,"arrow-right","로그인",SubmitLogin,"login-submit","LoginSubmit");
+            loginError=Text(login,"","login-error");loginError.name="LoginError";
+            loginPassword.RegisterValueChangedCallback(_=>loginError.text="");
+            Text(lockScreen,"비밀번호를 입력하여 로그인","lock-hint");
             var status=El(lockScreen,"lock-status row");Icon(status,"wifi");IconBtn(status,"power","전원",ShowPower);
-            lockScreen.RegisterCallback<PointerUpEvent>(evt=>
-            {
-                if(evt.target is Button || (evt.target as VisualElement)?.GetFirstAncestorOfType<Button>()!=null)return;
-                if(evt.button==0&&!IsInside(evt.target as VisualElement,status))Unlock();
-            });Visible(lockScreen,false);
+            Visible(lockScreen,false);
         }
-        public void Lock(){ClosePopups();SaveNoteTitle();Files.Save();locked=true;lockScreen.RemoveFromClassList("unlocking");Visible(toast,false);Visible(lockScreen,true);lockScreen.BringToFront();lockScreen.Focus();UpdateClock();}
-        public void Unlock(){locked=false;lockScreen.AddToClassList("unlocking");lockScreen.schedule.Execute(()=>{if(!locked)Visible(lockScreen,false);}).StartingIn(250);desktop.Focus();}
         void ShowPower()
         {
+            if(!AcceptsScreenInput)return;
             var menu=NewContext(new Vector2(desktop.resolvedStyle.width/2-100,desktop.resolvedStyle.height/2-70));
             if(locked){lockScreen.Add(menu);menu.BringToFront();}
-            ContextItem(menu,"lock-keyhole","잠금",()=>Lock());ContextItem(menu,"power","화면 끄기",()=>{Lock();lockScreen.AddToClassList("screen-off");lockScreen.RegisterCallbackOnce<PointerDownEvent>(_=>lockScreen.RemoveFromClassList("screen-off"));});
+            if(!locked)ContextItem(menu,"lock-keyhole","잠금",()=>Lock());
+            ContextItem(menu,"power","컴퓨터 끄기",PowerOff);
         }
         void OnKeyDown(KeyDownEvent evt)
         {
-            if(locked){if(evt.keyCode==KeyCode.Return || evt.keyCode==KeyCode.KeypadEnter){lockScreen.RemoveFromClassList("screen-off");Unlock();}evt.StopPropagation();return;}
+            if(!AcceptsScreenInput){evt.StopImmediatePropagation();return;}
+            if(locked)
+            {
+                if(evt.keyCode==KeyCode.Return||evt.keyCode==KeyCode.KeypadEnter){SubmitLogin();evt.StopImmediatePropagation();}
+                return; // Let the password field receive typed characters; never dispatch desktop shortcuts.
+            }
             if(evt.keyCode==KeyCode.Escape){ClosePopups();CloseDialog();evt.StopPropagation();return;}
             if(desktop.panel?.focusController?.focusedElement is WebBrowserView)return;
             if(evt.ctrlKey && evt.keyCode==KeyCode.Space){ShowSearch();evt.StopPropagation();return;}

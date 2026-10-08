@@ -20,6 +20,8 @@ namespace PrGame
         {
             yield return new WaitForSecondsRealtime(2);
             var os=FindAnyObjectByType<PortfolioDesktop>();var surface=FindAnyObjectByType<MonitorSurface>();
+            os.PowerOn();yield return new WaitForSecondsRealtime(2);
+            if(!os.TryLogin("1114")){Debug.LogError("Player smoke login failed");Application.Quit(1);yield break;}
             surface.seatedView.EnterComputer();yield return new WaitForSecondsRealtime(2);
             os.OpenApp("browser");os.Navigate("https://example.com/");
             float end=Time.realtimeSinceStartup+45;

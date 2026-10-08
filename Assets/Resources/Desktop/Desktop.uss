@@ -117,14 +117,28 @@ Label { margin: 0; padding: 0; flex-shrink: 0; -unity-text-align: middle-left; o
 .unlocking { translate: 0 -100%; }
 .lock-screen .icon { -unity-background-image-tint-color: #c2cdd9; }
 .lock-icon { margin-bottom: 22px; }
-.lock-time { font-size: 86px; letter-spacing: -3px; }
+.lock-time { font-size: 68px; letter-spacing: -3px; }
 .lock-date { font-size: 16px; margin-top: 8px; color: #b5c5d5; }
-.lock-avatar { width: 62px; height: 62px; border-radius: 31px; border-width: 16px; border-color: #354354; background-color: #354354; margin-top: 72px; }
+.lock-avatar { width: 62px; height: 62px; border-radius: 31px; border-width: 16px; border-color: #354354; background-color: #354354; margin-top: 36px; }
 .lock-user { margin-top: 14px; font-size: 16px; }
 .lock-hint { position: absolute; bottom: 43px; align-self: center; font-size: 13px; color: #b5c5d5; }
 .lock-status { position: absolute; bottom: 32px; right: 30px; }
-.screen-off { background-color: black; }
-.screen-off > * { visibility: hidden; }
+.login-form { width: 360px; margin-top: 24px; }
+.login-row { justify-content: center; }
+.login-password { width: 280px; margin: 0; }
+.login-password > .unity-text-field__input { background-color: #303f51; color: #e5edf4; border-width: 1px; border-color: #53687e; border-radius: 11px; padding: 10px 14px; min-height: 43px; }
+.login-password > .unity-text-field__input:focus { border-color: #a4bad3; }
+.desktop .login-submit { width: 43px; height: 43px; margin-left: 9px; background-color: #405773; border-radius: 11px; }
+.login-error { height: 35px; font-size: 12px; color: #e1a4aa; -unity-text-align: middle-center; }
+.power-screen { background-color: black; align-items: center; justify-content: center; }
+.boot-content { align-items: center; }
+.boot-wordmark { font-size: 22px; letter-spacing: 5px; color: #cbd7e3; }
+.boot-caption { font-size: 12px; color: #8998a8; margin-top: 25px; }
+.boot-track { width: 120px; height: 2px; background-color: #202b36; margin-top: 13px; }
+.boot-progress { width: 42px; height: 2px; background-color: #9cafc1; }
+.sage .lock-screen { background-color: #202927; }
+.sage .login-password > .unity-text-field__input { background-color: #303e36; border-color: #637867; }
+.sage .login-submit { background-color: #465e49; }
 .context-menu { width: 250px; padding: 7px; border-radius: 12px; color: var(--text); }
 .desktop .context-item { height: 38px; flex-direction: row; align-items: center; padding: 6px 9px; font-size: 13px; }
 .context-item .icon { width: 16px; height: 16px; margin-right: 12px; }
