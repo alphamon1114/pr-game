@@ -69,10 +69,10 @@ namespace PrGame.Editor
         public static void CheckReturned(PortfolioDesktop os)
         {
             os.Pointer.UpdateFromInput();
-            Assert(!os.Pointer.IsDisplayed && UnityEngine.Cursor.visible==originalNativeVisibility,"Leaving computer did not hide OS cursor and restore native pointer");
+            Assert(!os.Pointer.IsDisplayed && !UnityEngine.Cursor.visible,"Leaving computer did not hand cursor control to room free look");
             var visual=os.Pointer.Visual;os.enabled=false;
-            Assert(visual.parent?.parent==null && UnityEngine.Cursor.visible==originalNativeVisibility,"OS disable did not clean up cursor");
-            File.WriteAllText("Logs/OSQA/cursor-results.txt","PASS: hidden in room and during approach; monitor coordinates and arrow hotspot; native cursor hidden during computer use; pointer ignores picking; arrow/button/text/move/eight resize edges; resize shape retained during capture and released afterward; silver/sage palette; off-monitor and app-focus-loss hiding; native cursor restoration on exit; cleanup on OS disable.\n");
+            Assert(visual.parent?.parent==null && !UnityEngine.Cursor.visible,"OS disable stole cursor ownership from room free look");
+            File.WriteAllText("Logs/OSQA/cursor-results.txt","PASS: hidden in room and during approach; monitor coordinates and arrow hotspot; native cursor hidden during computer use; pointer ignores picking; arrow/button/text/move/eight resize edges; resize shape retained during capture and released afterward; silver/sage palette; off-monitor and app-focus-loss hiding; room free-look cursor ownership on exit; cleanup on OS disable.\n");
             Debug.Log("PR_GAME_DESKTOP_CURSOR_VERIFIED");
         }
     }

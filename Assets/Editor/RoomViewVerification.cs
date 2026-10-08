@@ -10,6 +10,63 @@ namespace PrGame.Editor
         static Vector3 seatedPosition;
         static Quaternion seatedRotation;
         static void Assert(bool ok,string message) { if(!ok)throw new Exception(message); }
+        public static void CheckFreeLook(MonitorSurface surface)
+        {
+            var view=surface.seatedView;var camera=surface.viewCamera;
+            var origin=camera.transform.position;var front=camera.transform.rotation;
+            const float dt=1f/60f;view.UseVerificationInput=true;
+            void Frames(int count,bool zoom=false){for(int i=0;i<count;i++)view.VerifyFrame(Vector2.zero,dt,rightHeld:zoom);}
+            try
+            {
+                view.VerifyFrame(Vector2.zero,dt,homePressed:true);Frames(90);
+                Assert(view.IsLooking&&!Cursor.visible,"Room did not capture free look without a mouse button");
+                for(int i=0;i<15;i++)view.VerifyFrame(new Vector2(1,.3f),dt);
+                Frames(45);var turned=camera.transform.rotation;
+                Assert(Quaternion.Angle(front,turned)>20,"Mouse motion without RMB did not turn the camera");
+                Assert(!view.IsZooming&&Mathf.Abs(camera.fieldOfView-view.defaultFieldOfView)<.1f,"Free look unexpectedly zoomed");
+                Capture(camera,"room-free-look");
+                view.VerifyFrame(Vector2.zero,dt,rightHeld:true);
+                Assert(view.IsZooming&&camera.fieldOfView<view.defaultFieldOfView&&camera.fieldOfView>view.zoomFieldOfView,"RMB zoom snapped or failed to start");
+                Frames(90,true);
+                Assert(Mathf.Abs(camera.fieldOfView-view.zoomFieldOfView)<.1f,"Held RMB did not reach inspection zoom");
+                Assert(Vector3.Distance(camera.transform.position,origin)<.001f&&Quaternion.Angle(camera.transform.rotation,turned)<.1f,"Zoom moved the seat or changed aim");
+                Assert(!view.CanInteractWithComputer,"Inspection zoom enabled OS input");Capture(camera,"room-hold-zoom");
+                view.VerifyFrame(Vector2.zero,dt);
+                Assert(!view.IsZooming&&camera.fieldOfView>view.zoomFieldOfView&&camera.fieldOfView<view.defaultFieldOfView,"Zoom release did not ease back");Frames(90);
+                Assert(Mathf.Abs(camera.fieldOfView-view.defaultFieldOfView)<.1f,"Zoom release failed to restore FOV");
+
+                view.VerifyFrame(Vector2.zero,dt,homePressed:true);Frames(90);
+                view.VerifyFrame(Vector2.zero,dt,escapePressed:true);
+                Assert(!view.IsLooking&&Cursor.visible,"Esc did not release the room cursor");
+                view.VerifyFrame(new Vector2(50,50),dt,rightHeld:true);Frames(30);
+                Assert(!view.IsZooming&&Quaternion.Angle(camera.transform.rotation,front)<.1f,"Released pointer still moved or zoomed room");
+                view.VerifyFrame(new Vector2(100,100),dt,leftPressed:true);Frames(30);
+                Assert(view.IsLooking&&!view.IsFocused&&Quaternion.Angle(camera.transform.rotation,front)<.1f,"Recapture click entered computer or jumped camera");
+
+                Frames(60,true);view.VerifyFrame(Vector2.zero,dt,rightHeld:true,computerPressed:true);Frames(120,true);
+                Assert(view.IsFocused&&!view.IsLooking&&!view.IsZooming&&!view.CanInteractWithComputer,"Zoom-to-computer transition leaked held input");
+                view.VerifyFrame(Vector2.zero,dt);Frames(5);
+                Assert(view.CanInteractWithComputer,"Computer did not unlock after the approach button was released");
+                var focused=camera.transform.rotation;
+                for(int i=0;i<30;i++)view.VerifyFrame(new Vector2(20,20),dt,rightHeld:true);
+                Assert(!view.IsZooming&&Mathf.Abs(camera.fieldOfView-view.focusFieldOfView)<.1f&&Quaternion.Angle(focused,camera.transform.rotation)<.1f,"OS right click or mouse input changed camera");
+                view.VerifyFrame(new Vector2(100,100),dt,escapePressed:true);Frames(90);
+                Assert(view.IsLooking&&!view.IsFocused&&!view.CanInteractWithComputer&&Quaternion.Angle(front,camera.transform.rotation)<.1f,"Leaving computer failed to resume room look cleanly");
+
+                Frames(30,true);view.VerifyFrame(new Vector2(40,40),dt,rightHeld:true,appFocused:false);
+                Assert(!view.IsLooking&&!view.IsZooming&&Cursor.visible,"Focus loss retained zoom or cursor capture");
+                view.VerifyFrame(new Vector2(40,40),dt);
+                Assert(!view.IsLooking,"Focus regain recaptured the desktop without a click");
+                view.VerifyFrame(Vector2.zero,dt,leftPressed:true);Frames(90);
+                Assert(view.IsLooking&&!Cursor.visible&&Quaternion.Angle(front,camera.transform.rotation)<.1f,"Focus recapture changed aim");
+                view.enabled=false;
+                Assert(!view.IsLooking&&!view.IsZooming&&Cursor.visible&&Mathf.Abs(camera.fieldOfView-view.defaultFieldOfView)<.1f,"Disabling view retained capture or zoom");
+                view.enabled=true;view.VerifyFrame(Vector2.zero,dt,homePressed:true);Frames(90);
+                File.WriteAllText("Logs/OSQA/free-look-results.txt","PASS: default mouse look without RMB; smooth held RMB 58-to-32-degree zoom and release; fixed seat and aim; zoom blocks OS input; Esc cursor release; click recapture without entry or jump; held-button gate during computer approach; fixed computer camera and OS RMB behavior; focus loss/regain; disable cleanup.\n");
+                Debug.Log("PR_GAME_FREE_LOOK_VERIFIED");
+            }
+            finally {view.UseVerificationInput=false;}
+        }
         public static void CheckRoom(MonitorSurface surface)
         {
             var camera=surface.viewCamera;var view=surface.seatedView;
@@ -78,6 +135,7 @@ namespace PrGame.Editor
         public static void CheckReturned(MonitorSurface surface,PortfolioDesktop desktop)
         {
             Assert(!surface.seatedView.IsFocused && !surface.seatedView.CanInteractWithComputer,"Computer interaction remains active");
+            Assert(surface.seatedView.IsLooking&&!Cursor.visible,"Room free look did not resume after computer use");
             Assert(!desktop.IsTyping,"Text field retained focus after leaving computer");
             Assert(Vector3.Distance(surface.viewCamera.transform.position,seatedPosition)<.005f,"Camera did not return to seated position");
             Assert(Quaternion.Angle(surface.viewCamera.transform.rotation,seatedRotation)<.3f,"Room orientation was not restored");

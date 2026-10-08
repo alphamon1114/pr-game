@@ -1,0 +1,1 @@
+PASS: default mouse look without RMB; smooth held RMB 58-to-32-degree zoom and release; fixed seat and aim; zoom blocks OS input; Esc cursor release; click recapture without entry or jump; held-button gate during computer approach; fixed computer camera and OS RMB behavior; focus loss/regain; disable cleanup.

@@ -9,19 +9,38 @@ namespace PrGame
         public Light deskLamp;
         public float defaultFieldOfView = 58f;
         public float focusFieldOfView = 48f;
+        [Range(15f, 55f)] public float zoomFieldOfView = 32f;
+        [Range(1f, 20f)] public float zoomResponse = 7f;
+        [Range(.1f, 5f)] public float lookSensitivity = 1.8f;
         [Tooltip("Visible OS screen fill on the limiting axis; 0.92 covers 84.64% of a 16:9 view.")]
         [Range(.5f, .96f)] public float screenViewportFraction = .92f;
         public bool IsLooking { get; private set; }
+        public bool IsZooming { get; private set; }
         public bool IsFocused { get; private set; }
         public bool CanInteractWithComputer { get; private set; }
         Camera view;
         Vector3 seatedPosition;
         Quaternion seatedRotation;
         float yaw, pitch, lampIntensity, elapsed;
-        bool waitForMouseRelease;
+        bool waitForMouseRelease, lookReleased, hasApplicationFocus, skipLookFrame;
         PortfolioDesktop desktop;
         MonitorSurface monitor;
         Font helpFont;
+        struct ViewInput
+        {
+            public Vector2 look;
+            public bool leftPressed, leftHeld, rightHeld, escapePressed, computerPressed, homePressed, atmospherePressed;
+        }
+#if UNITY_EDITOR
+        public bool UseVerificationInput { get; set; }
+        // Drive the same input path without moving or capturing the user's mouse during QA.
+        public void VerifyFrame(Vector2 look, float deltaTime, bool rightHeld=false, bool leftPressed=false,
+            bool escapePressed=false, bool computerPressed=false, bool homePressed=false, bool appFocused=true)
+        {
+            TickView(new ViewInput { look=look, rightHeld=rightHeld, leftPressed=leftPressed, leftHeld=leftPressed,
+                escapePressed=escapePressed, computerPressed=computerPressed, homePressed=homePressed }, deltaTime, appFocused);
+        }
+#endif
 
         void Awake()
         {
@@ -34,21 +53,30 @@ namespace PrGame
             helpFont = Resources.Load<Font>("Fonts/NotoSansKR-Regular");
         }
 
+        void OnEnable()
+        {
+            hasApplicationFocus = Application.isFocused || Application.isBatchMode;
+            lookReleased = false;
+            SetLooking(hasApplicationFocus);
+        }
+
         public void EnterComputer()
         {
             if (!monitor || !monitor.screenCollider) return;
-            StopLooking();
+            SetLooking(false);
+            IsZooming = false;
             IsFocused = true;
             // The approach click must never also click an OS button.
-            waitForMouseRelease = Input.GetMouseButton(0) || Input.GetMouseButton(1);
+            waitForMouseRelease = true;
             SetInteraction(false);
         }
 
         public void LeaveComputer()
         {
             IsFocused = false;
+            IsZooming = false;
             SetInteraction(false);
-            StopLooking();
+            SetLooking(isActiveAndEnabled && hasApplicationFocus && !lookReleased);
         }
 
         // Frame only the usable OS display, not the bezel or projecting light shields.
@@ -71,49 +99,72 @@ namespace PrGame
 
         void Update()
         {
-            bool typing = desktop && desktop.IsTyping;
-            if (IsFocused && Input.GetKeyDown(KeyCode.Escape)) LeaveComputer();
-            else if (!typing && Input.GetKeyDown(KeyCode.F))
-            {
-                if (IsFocused) LeaveComputer(); else EnterComputer();
-            }
-            else if (!IsFocused && !IsLooking && Input.GetMouseButtonDown(0) &&
-                monitor && monitor.IsPointerOverMonitor(Input.mousePosition)) EnterComputer();
+#if UNITY_EDITOR
+            if (UseVerificationInput) return;
+#endif
+            // Unity Editor Esc and OS focus changes may release capture outside our input path.
+            if (IsLooking && !Application.isBatchMode && Cursor.lockState != CursorLockMode.Locked)
+                lookReleased = true;
+            TickView(new ViewInput {
+                look = new Vector2(Input.GetAxisRaw("Mouse X"), Input.GetAxisRaw("Mouse Y")),
+                leftPressed = Input.GetMouseButtonDown(0), leftHeld = Input.GetMouseButton(0), rightHeld = Input.GetMouseButton(1),
+                escapePressed = Input.GetKeyDown(KeyCode.Escape), computerPressed = Input.GetKeyDown(KeyCode.F),
+                homePressed = Input.GetKeyDown(KeyCode.Home), atmospherePressed = Input.GetKeyDown(KeyCode.H)
+            }, Time.unscaledDeltaTime, Application.isFocused || Application.isBatchMode);
+        }
 
-            if (!typing && Input.GetKeyDown(KeyCode.Home))
-            {
-                LeaveComputer(); yaw = pitch = 0;
-            }
-            bool alt = Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt);
-            if (Input.GetMouseButtonDown(1) && (!IsFocused || alt))
+        void TickView(ViewInput input, float deltaTime, bool appFocused)
+        {
+            if (hasApplicationFocus != appFocused) OnApplicationFocus(appFocused);
+            bool wasLooking = IsLooking;
+            bool typing = desktop && desktop.IsTyping;
+            if (appFocused && input.escapePressed)
             {
                 if (IsFocused) LeaveComputer();
-                IsLooking = true;
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
+                else { lookReleased = true; SetLooking(false); }
             }
-            if (!Input.GetMouseButton(1)) StopLooking();
-            if (IsLooking)
+            else if (appFocused && !typing && input.computerPressed)
             {
-                yaw = Mathf.Repeat(yaw + Input.GetAxisRaw("Mouse X") * 1.8f + 180f, 360f) - 180f;
-                pitch = Mathf.Clamp(pitch - Input.GetAxisRaw("Mouse Y") * 1.8f, -65f, 70f);
+                lookReleased = false;
+                if (IsFocused) LeaveComputer(); else EnterComputer();
             }
-            if (!typing && Input.GetKeyDown(KeyCode.H)) atmosphere = atmosphere > 0 ? 0 : .25f;
-            if (!Input.GetMouseButton(0) && !Input.GetMouseButton(1)) waitForMouseRelease = false;
+            else if (appFocused && !IsFocused && input.leftPressed)
+            {
+                // A recapture click only resumes looking; it must not also enter the computer.
+                if (lookReleased) { lookReleased = false; wasLooking = false; }
+                else if (monitor && monitor.IsPointerOverMonitor(new Vector2(Screen.width*.5f, Screen.height*.5f))) EnterComputer();
+            }
+            if (appFocused && !typing && input.homePressed)
+            {
+                lookReleased = false; LeaveComputer(); yaw = pitch = 0; wasLooking = false;
+            }
+            SetLooking(appFocused && !IsFocused && !lookReleased);
+            IsZooming = IsLooking && input.rightHeld;
+            if (IsLooking && wasLooking && !skipLookFrame)
+            {
+                // Lower angular sensitivity as the view narrows, keeping zoomed inspection steady.
+                float sensitivity = lookSensitivity * Mathf.Tan(view.fieldOfView*Mathf.Deg2Rad*.5f) /
+                    Mathf.Tan(defaultFieldOfView*Mathf.Deg2Rad*.5f);
+                yaw = Mathf.Repeat(yaw + input.look.x * sensitivity + 180f, 360f) - 180f;
+                pitch = Mathf.Clamp(pitch - input.look.y * sensitivity, -65f, 70f);
+            }
+            skipLookFrame = false;
+            if (appFocused && !typing && input.atmospherePressed) atmosphere = atmosphere > 0 ? 0 : .25f;
+            if (!input.leftHeld && !input.rightHeld) waitForMouseRelease = false;
 
             var targetPosition = seatedPosition;
             var targetRotation = seatedRotation * Quaternion.Euler(pitch, yaw, 0);
             if (IsFocused) TryGetFocusPose(out targetPosition, out targetRotation);
-            float blend = 1f - Mathf.Exp(-10f * Time.unscaledDeltaTime);
+            float blend = 1f - Mathf.Exp(-10f * deltaTime);
             transform.position = Vector3.Lerp(transform.position, targetPosition, blend);
             transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, blend);
-            float targetFov = IsFocused ? focusFieldOfView : defaultFieldOfView;
-            view.fieldOfView = Mathf.Lerp(view.fieldOfView, targetFov, blend);
-            SetInteraction(IsFocused && !waitForMouseRelease &&
+            float targetFov = IsFocused ? focusFieldOfView : IsZooming ? Mathf.Min(zoomFieldOfView,defaultFieldOfView) : defaultFieldOfView;
+            view.fieldOfView = Mathf.Lerp(view.fieldOfView, targetFov, IsFocused ? blend : 1f-Mathf.Exp(-zoomResponse*deltaTime));
+            SetInteraction(appFocused && IsFocused && !waitForMouseRelease &&
                 Vector3.Distance(transform.position, targetPosition) < .002f &&
                 Quaternion.Angle(transform.rotation, targetRotation) < .2f && Mathf.Abs(view.fieldOfView-targetFov) < .1f);
 
-            elapsed += Time.deltaTime;
+            elapsed += deltaTime;
             if (deskLamp)
             {
                 float phase = elapsed % 43f;
@@ -129,20 +180,33 @@ namespace PrGame
             if (!active && desktop) desktop.SuspendInput();
         }
 
-        void StopLooking()
+        void SetLooking(bool active)
         {
-            if (!IsLooking) return;
-            IsLooking = false;
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
+            if (IsLooking == active) return;
+            IsLooking = active;
+            if (active) skipLookFrame = true;
+            // Batch QA must never capture the desktop pointer.
+            if (!Application.isBatchMode) Cursor.lockState = active ? CursorLockMode.Locked : CursorLockMode.None;
+            Cursor.visible = !active;
         }
-        void OnApplicationFocus(bool hasFocus) { if (!hasFocus) { LeaveComputer(); StopLooking(); } }
-        void OnDisable() { LeaveComputer(); if (deskLamp) deskLamp.intensity = lampIntensity; }
+        void OnApplicationFocus(bool hasFocus)
+        {
+            hasApplicationFocus = hasFocus;
+            if (!hasFocus) { lookReleased = true; LeaveComputer(); }
+        }
+        void OnDisable()
+        {
+            LeaveComputer(); SetLooking(false);
+            if (view) view.fieldOfView = defaultFieldOfView;
+            if (deskLamp) deskLamp.intensity = lampIntensity;
+        }
 
         void OnGUI()
         {
             var style = new GUIStyle(GUI.skin.label) { font = helpFont, fontSize = Mathf.Max(12, Screen.height / 65), alignment = TextAnchor.MiddleCenter };
-            string text = IsFocused ? "컴퓨터 조작 중     ·     ESC  방 둘러보기" : "오른쪽 마우스를 누른 채 움직여 둘러보기     ·     모니터 클릭 / F  컴퓨터 사용     ·     HOME  정면";
+            string text = IsFocused ? "컴퓨터 조작 중     ·     ESC  방 둘러보기" :
+                !IsLooking ? "화면 클릭  둘러보기 재개     ·     F  컴퓨터 사용" :
+                "마우스로 둘러보기     ·     우클릭 누르기  확대     ·     모니터를 보고 클릭 / F  컴퓨터 사용     ·     ESC  마우스 해제";
             var rect = new Rect(0, Screen.height-36, Screen.width, 28);
             style.normal.textColor = new Color(0, 0, 0, .85f);
             GUI.Label(new Rect(rect.x+1, rect.y+1, rect.width, rect.height), text, style);
