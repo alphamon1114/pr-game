@@ -1,0 +1,170 @@
+<section id="pr-settings-review" data-theme="silver" aria-label="UNTITLED OS 설정 구성 시안">
+  <style>
+    #pr-settings-review { --os-bg:#e9eef4;--os-side:#dfe6ee;--os-field:#f4f7fa;--os-text:#293849;--os-soft:#596b7e;--os-line:#c8d2dd;--os-accent:#456c96;--os-selected:#cbdced;--os-on:#fff; font:14px/1.5 'Segoe UI','Malgun Gothic',sans-serif;color:var(--os-text); }
+    #pr-settings-review[data-theme="sage"] { --os-bg:#252b2a;--os-side:#202625;--os-field:#2d3632;--os-text:#e4eade;--os-soft:#a5b3a6;--os-line:#414d45;--os-accent:#acc6a0;--os-selected:#3d5141;--os-on:#20291f; }
+    #pr-settings-review * { box-sizing:border-box; }
+    #pr-settings-review .os-window { border:1px solid var(--os-line);border-radius:20px;overflow:hidden;background:var(--os-bg); }
+    #pr-settings-review .os-title { display:flex;align-items:center;gap:10px;padding:15px 20px;border-bottom:1px solid var(--os-line);background:var(--os-side);font-weight:500; }
+    #pr-settings-review .os-title svg { color:var(--os-accent); }
+    #pr-settings-review .os-layout { display:grid;grid-template-columns:180px minmax(0,1fr);min-height:455px; }
+    #pr-settings-review .os-sidebar { padding:24px 12px;background:var(--os-side);border-right:1px solid var(--os-line); }
+    #pr-settings-review .os-profile { display:flex;align-items:center;gap:10px;padding:0 8px 24px; }
+    #pr-settings-review .os-avatar { display:grid;place-items:center;width:36px;height:36px;flex-shrink:0;border-radius:12px;background:var(--os-selected);color:var(--os-accent); }
+    #pr-settings-review small { display:block;font-size:12px;color:var(--os-soft); }
+    #pr-settings-review button,#pr-settings-review input { font:inherit; }
+    #pr-settings-review button { cursor:pointer;color:var(--os-text);border:1px solid var(--os-line);background:var(--os-field);border-radius:10px;padding:9px 13px; }
+    #pr-settings-review button:hover { filter:brightness(.96); }
+    #pr-settings-review .os-nav { display:grid;gap:6px; }
+    #pr-settings-review .os-nav button { display:flex;align-items:center;gap:10px;border:0;background:transparent;text-align:left;min-height:44px; }
+    #pr-settings-review .os-nav button[aria-pressed="true"] { background:var(--os-selected);color:var(--os-text);font-weight:500; }
+    #pr-settings-review .os-main { padding:28px;min-width:0; }
+    #pr-settings-review h2 { margin:0 0 6px;font-size:22px;font-weight:500;letter-spacing:-.6px; }
+    #pr-settings-review .os-sub { color:var(--os-soft);margin:0 0 25px;font-size:13px; }
+    #pr-settings-review h3 { margin:25px 0 12px;font-size:14px;font-weight:500; }
+    #pr-settings-review .os-themes { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px; }
+    #pr-settings-review .os-theme { padding:9px;text-align:left;min-width:0; }
+    #pr-settings-review .os-theme[aria-pressed="true"] { outline:2px solid var(--os-accent);outline-offset:2px; }
+    #pr-settings-review .os-swatch { display:block;position:relative;height:118px;border-radius:7px;overflow:hidden;background:#253342;margin-bottom:12px; }
+    #pr-settings-review .os-swatch::before { content:'';position:absolute;left:15%;right:15%;top:12%;height:15%;border-radius:9px;background:#dae5ee; }
+    #pr-settings-review .os-swatch::after { content:'';position:absolute;left:13%;right:13%;top:40%;bottom:14%;border-radius:7px;border-top:12px solid #c4d2df;background:#e9eff5; }
+    #pr-settings-review .os-swatch.sage { background:#171e1c; }
+    #pr-settings-review .os-swatch.sage::before { background:#889f81; }
+    #pr-settings-review .os-swatch.sage::after { border-color:#435449;background:#2d3932; }
+    #pr-settings-review .os-option { display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 0;border-bottom:1px solid var(--os-line); }
+    #pr-settings-review .os-option:last-child { border-bottom:0; }
+    #pr-settings-review .os-option input[type="checkbox"] { width:19px;height:19px;accent-color:var(--os-accent);flex-shrink:0;cursor:pointer; }
+    #pr-settings-review .os-volume { padding:20px 0 22px; }
+    #pr-settings-review .os-volume-heading { display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:16px; }
+    #pr-settings-review .os-volume-heading output { font-size:22px;font-weight:500;font-variant-numeric:tabular-nums;color:var(--os-accent); }
+    #pr-settings-review .os-volume input[type="range"] { display:block;width:100%;min-width:0;height:30px;margin:0;accent-color:var(--os-accent);cursor:pointer; }
+    #pr-settings-review .os-volume-limits { display:flex;justify-content:space-between;color:var(--os-soft);font-size:12px; }
+    #pr-settings-review .os-test-sound { display:inline-flex;align-items:center;gap:9px;margin-top:22px;min-height:44px; }
+    #pr-settings-review button:disabled { cursor:default;opacity:.55; }
+    #pr-settings-review .os-address { display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;margin-top:10px; }
+    #pr-settings-review input[type="url"] { min-width:0;width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--os-line);background:var(--os-field);color:var(--os-text); }
+    #pr-settings-review .os-apply { background:var(--os-accent);color:var(--os-on);border-color:var(--os-accent); }
+    #pr-settings-review .os-bookmark-sample { display:flex;flex-wrap:wrap;gap:18px;padding:12px 14px;background:var(--os-field);border:1px solid var(--os-line);border-radius:10px;margin-top:15px;font-size:12px; }
+    #pr-settings-review .os-status { display:flex;align-items:center;gap:7px;color:var(--os-soft);font-size:12px;padding:12px 20px;border-top:1px solid var(--os-line);min-height:43px; }
+    #pr-settings-review .os-status svg { color:var(--os-accent); }
+    #pr-settings-review kbd { font:12px/1.5 'Segoe UI',sans-serif;padding:3px 6px;border-radius:5px;background:var(--os-field);border:1px solid var(--os-line);white-space:nowrap; }
+    #pr-settings-review [hidden] { display:none!important; }
+    #pr-settings-review[data-navigation="top"] .os-layout { grid-template-columns:1fr; }
+    #pr-settings-review[data-navigation="top"] .os-sidebar { border-right:0;border-bottom:1px solid var(--os-line);padding:14px 20px; }
+    #pr-settings-review[data-navigation="top"] .os-profile { padding:0 0 12px; }
+    #pr-settings-review[data-navigation="top"] .os-nav { grid-template-columns:repeat(5,minmax(0,1fr)); }
+    @media(max-width:580px) { #pr-settings-review .os-layout { grid-template-columns:1fr; } #pr-settings-review .os-sidebar { border-right:0;border-bottom:1px solid var(--os-line);padding:16px; } #pr-settings-review .os-profile { padding:0 0 12px; } #pr-settings-review .os-nav,#pr-settings-review[data-navigation="top"] .os-nav { grid-template-columns:repeat(2,minmax(0,1fr)); } #pr-settings-review .os-main { padding:22px 18px; } #pr-settings-review input[type="url"] { font-size:16px; } #pr-settings-review .os-address { grid-template-columns:1fr; } #pr-settings-review .os-option { flex-wrap:wrap; } }
+    @media(prefers-reduced-motion:no-preference) { #pr-settings-review .os-window { transition:background .18s,color .18s; } }
+  </style>
+  <div class="os-window">
+    <header class="os-title"><i data-lucide="settings-2" aria-hidden="true"></i>설정</header>
+    <div class="os-layout">
+      <aside class="os-sidebar">
+        <div class="os-profile"><span class="os-avatar"><i data-lucide="user-round" aria-hidden="true"></i></span><div>조건희<small>이 컴퓨터의 사용자</small></div></div>
+        <nav class="os-nav" aria-label="설정 항목">
+          <button type="button" data-page="appearance" aria-pressed="false"><i data-lucide="palette" aria-hidden="true"></i>테마</button>
+          <button type="button" data-page="browser" aria-pressed="false"><i data-lucide="globe" aria-hidden="true"></i>브라우저</button>
+          <button type="button" data-page="sound" aria-pressed="true"><i data-lucide="volume-2" aria-hidden="true"></i>소리</button>
+          <button type="button" data-page="notifications" aria-pressed="false"><i data-lucide="bell" aria-hidden="true"></i>알림</button>
+          <button type="button" data-page="controls" aria-pressed="false"><i data-lucide="mouse-pointer-2" aria-hidden="true"></i>조작 안내</button>
+        </nav>
+      </aside>
+      <main class="os-main">
+        <section data-panel="appearance" aria-label="테마 설정" hidden>
+          <h2>편안한 쪽으로.</h2><p class="os-sub">창과 상단 아일랜드의 분위기를 바꿔 보세요.</p>
+          <h3>테마</h3>
+          <div class="os-themes">
+            <button type="button" class="os-theme" data-palette="silver" aria-pressed="true"><span class="os-swatch" aria-hidden="true"></span>실버 + 블루<small>밝고 차분하게</small></button>
+            <button type="button" class="os-theme" data-palette="sage" aria-pressed="false"><span class="os-swatch sage" aria-hidden="true"></span>차콜 + 세이지<small>어둡고 부드럽게</small></button>
+          </div>
+        </section>
+        <section data-panel="browser" aria-label="브라우저 설정" hidden>
+          <h2>브라우저</h2><p class="os-sub">처음 열리는 페이지와 즐겨찾기 표시.</p>
+          <form class="os-home-form"><label for="pr-start-url">시작페이지</label><div class="os-address"><input id="pr-start-url" type="url" value="https://www.naver.com/" required aria-describedby="pr-home-caption"><button class="os-apply" type="submit">적용</button></div><small id="pr-home-caption">홈 버튼도 이 주소로 이동해요.</small></form>
+          <label class="os-option"><span>즐겨찾기 표시<small>주소창 아래에 표시</small></span><input type="checkbox" class="os-show-bookmarks" checked></label>
+          <div class="os-bookmark-sample" aria-label="즐겨찾기 표시 미리보기"><span>문서</span><span>보관함</span><span>VARCO 3D</span></div>
+          <div class="os-option"><span>새 탭</span><small>시계와 검색창</small></div>
+        </section>
+        <section data-panel="sound" aria-label="소리 설정">
+          <h2>소리</h2><p class="os-sub">컴퓨터에서 나는 소리의 크기를 조절해요.</p>
+          <div class="os-volume">
+            <div class="os-volume-heading"><label for="pr-os-volume">출력 볼륨<small>알림 · 브라우저 · 시스템 소리</small></label><output for="pr-os-volume" id="pr-volume-value">70%</output></div>
+            <input id="pr-os-volume" type="range" min="0" max="100" step="1" value="70" aria-valuetext="70퍼센트" aria-describedby="pr-mute-caption">
+            <div class="os-volume-limits" aria-hidden="true"><span>0</span><span>100</span></div>
+          </div>
+          <label class="os-option"><span>음소거<small id="pr-mute-caption">다시 켜면 기존 볼륨으로 돌아와요.</small></span><input type="checkbox" class="os-mute"></label>
+          <button type="button" class="os-test-sound"><i data-lucide="volume-2" aria-hidden="true"></i><span>테스트 소리</span></button>
+        </section>
+        <section data-panel="notifications" aria-label="알림 설정" hidden>
+          <h2>알림</h2><p class="os-sub">작업 중 방해받지 않도록.</p>
+          <label class="os-option"><span>방해 금지<small>알림은 알림 센터에 모아 둬요.</small></span><input type="checkbox" class="os-dnd"></label>
+          <div class="os-option"><span>알림 관리<small>알림 센터에서 각각 지울 수 있어요.</small></span><i data-lucide="x" aria-hidden="true"></i></div>
+        </section>
+        <section data-panel="controls" aria-label="조작 안내" hidden>
+          <h2>조작 안내</h2><p class="os-sub">방과 컴퓨터 사이를 오가며.</p>
+          <div class="os-option"><span>컴퓨터에 가까이</span><kbd>F</kbd></div>
+          <div class="os-option"><span>방으로 돌아가기</span><kbd>Esc</kbd></div>
+          <div class="os-option"><span>방 둘러보기</span><kbd>우클릭 + 마우스 이동</kbd></div>
+          <div class="os-option"><span>창 최대화 · 원래 크기</span><small>제목 표시줄 더블클릭</small></div>
+          <div class="os-option"><span>창 크기 조절</span><small>가장자리 · 모서리 끌기</small></div>
+        </section>
+      </main>
+    </div>
+    <footer class="os-status"><i data-lucide="check" aria-hidden="true"></i><span aria-live="polite" class="os-status-text">출력 볼륨 70%</span></footer>
+  </div>
+  <script>
+    (()=>{
+      const root=document.getElementById('pr-settings-review');
+      const design={navigation:'side',theme:'silver'};
+      const note=text=>{root.querySelector('.os-status-text').textContent=text;};
+      const sound={volume:70,muted:false};
+      const volume=root.querySelector('#pr-os-volume');
+      const mute=root.querySelector('.os-mute');
+      const testSound=root.querySelector('.os-test-sound');
+      let audioContext=null,masterGain=null,playing=false;
+      function updateSound(announce=true){
+        root.querySelector('#pr-volume-value').value=sound.volume+'%';
+        volume.setAttribute('aria-valuetext',sound.volume+'퍼센트'+(sound.muted?', 음소거 중':''));
+        if(masterGain)masterGain.gain.setTargetAtTime(sound.muted?0:Math.pow(sound.volume/100,2)*.12,audioContext.currentTime,.015);
+        testSound.disabled=playing||sound.muted||sound.volume===0;
+        testSound.querySelector('span').textContent=playing?'재생 중…':sound.muted||sound.volume===0?'음소거 중':'테스트 소리';
+        if(announce)note(sound.muted?'음소거 · 설정 볼륨 '+sound.volume+'%':'출력 볼륨 '+sound.volume+'%');
+      }
+      volume.addEventListener('input',()=>{sound.volume=Number(volume.value);updateSound(false);});
+      volume.addEventListener('change',()=>updateSound());
+      mute.addEventListener('change',()=>{sound.muted=mute.checked;updateSound();});
+      testSound.addEventListener('click',async()=>{
+        if(playing||sound.muted||sound.volume===0)return;
+        playing=true;updateSound(false);
+        try{
+          const AudioEngine=window.AudioContext||window.webkitAudioContext;
+          if(!AudioEngine)throw new Error('Audio unavailable');
+          if(!audioContext){audioContext=new AudioEngine();masterGain=audioContext.createGain();masterGain.gain.value=0;masterGain.connect(audioContext.destination);}
+          await audioContext.resume();
+          if(audioContext.state!=='running')throw new Error('Audio suspended');
+          updateSound(false);
+          const now=audioContext.currentTime;
+          [659.25,880].forEach((frequency,index)=>{
+            const oscillator=audioContext.createOscillator();const envelope=audioContext.createGain();
+            const start=now+.02+index*.18;
+            oscillator.type='sine';oscillator.frequency.value=frequency;
+            envelope.gain.setValueAtTime(0,start);envelope.gain.linearRampToValueAtTime(.55,start+.015);envelope.gain.exponentialRampToValueAtTime(.001,start+.3);
+            oscillator.connect(envelope);envelope.connect(masterGain);oscillator.start(start);oscillator.stop(start+.32);
+            oscillator.onended=()=>{oscillator.disconnect();envelope.disconnect();if(index===1){playing=false;updateSound();}};
+          });
+          note('테스트 소리 · '+sound.volume+'%');
+        }catch{playing=false;updateSound(false);note('이 미리보기 환경에서는 소리를 재생할 수 없어요.');}
+      });
+      window.addEventListener('pagehide',()=>{if(audioContext)audioContext.close().catch(()=>{});},{once:true});
+      function render(){root.dataset.navigation=design.navigation;root.dataset.theme=design.theme;root.querySelectorAll('[data-palette]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.palette===design.theme)));note(design.theme==='sage'?'차콜 + 세이지':'실버 + 블루');}
+      root.querySelectorAll('[data-page]').forEach(button=>button.addEventListener('click',()=>{root.querySelectorAll('[data-page]').forEach(b=>b.setAttribute('aria-pressed',String(b===button)));root.querySelectorAll('[data-panel]').forEach(p=>p.hidden=p.dataset.panel!==button.dataset.page);}));
+      root.querySelectorAll('[data-palette]').forEach(button=>button.addEventListener('click',()=>{design.theme=button.dataset.palette;render();}));
+      root.querySelector('.os-home-form').addEventListener('submit',event=>{event.preventDefault();const input=root.querySelector('#pr-start-url');let url;try{url=new URL(input.value);}catch{input.setCustomValidity('웹 주소를 입력해 주세요.');input.reportValidity();return;}if(!['http:','https:'].includes(url.protocol)){input.setCustomValidity('http 또는 https 주소를 입력해 주세요.');input.reportValidity();return;}input.setCustomValidity('');note('시작페이지: '+url.hostname);});
+      root.querySelector('#pr-start-url').addEventListener('input',event=>event.target.setCustomValidity(''));
+      root.querySelector('.os-show-bookmarks').addEventListener('change',event=>{root.querySelector('.os-bookmark-sample').hidden=!event.target.checked;note(event.target.checked?'즐겨찾기 표시':'즐겨찾기 숨김');});
+      root.querySelector('.os-dnd').addEventListener('change',event=>note(event.target.checked?'방해 금지 켜짐':'방해 금지 꺼짐'));
+      render();
+      updateSound();
+      if(globalThis.Tweak){const tweak=new Tweak({container:root,onChange:render});tweak.addSelect(design,'navigation',{label:'메뉴 배치',options:[{label:'왼쪽 목록',value:'side'},{label:'상단 탭',value:'top'}]});tweak.addSelect(design,'theme',{label:'테마',options:[{label:'실버 + 블루',value:'silver'},{label:'차콜 + 세이지',value:'sage'}]});}
+    })();
+  </script>
+</section>
