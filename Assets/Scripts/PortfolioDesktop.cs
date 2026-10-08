@@ -29,7 +29,7 @@ namespace PrGame
             get
             {
                 var element=desktop?.panel?.focusController?.focusedElement as VisualElement;
-                for(;element!=null;element=element.parent) if(element is TextField)return true;
+                for(;element!=null;element=element.parent) if(element is TextField||element is WebBrowserView)return true;
                 return false;
             }
         }
@@ -91,7 +91,7 @@ namespace PrGame
             if(!string.IsNullOrEmpty(Files.LastError)) Notify("저장 상태",Files.LastError);
             Pointer=new DesktopCursor(desktop,GetComponent<MonitorSurface>());
         }
-        void LateUpdate(){Pointer?.UpdateFromInput();}
+        void LateUpdate(){TickWebBrowser();Pointer?.UpdateFromInput();}
         void OnApplicationFocus(bool focused){if(!focused)Pointer?.Update(Input.mousePosition,false);}
         void Update()
         {
@@ -108,6 +108,7 @@ namespace PrGame
         {
             ResetFileClick();
             Pointer?.Dispose();Pointer=null;
+            DisposeWebBrowser();
             if(Files!=null){SaveNoteTitle();Files.Changed-=OnFilesChanged;if(Files.Dirty)Files.Save();}
             windows.Clear();appButtons.Clear();notifications.Clear();browserTabs.Clear();
         }
@@ -136,7 +137,7 @@ namespace PrGame
                 var rect=id=="notes" ? new Rect(660,265,500,390) : id=="settings" ? new Rect(290,130,720,490) : new Rect(150,112,980,550);
                 window=new DesktopWindow(id,AppNames[index],AppIcons[index],rect,()=>new Vector2(desktop.resolvedStyle.width,desktop.resolvedStyle.height));
                 window.Focused+=()=>FocusApp(id);window.Changed+=UpdateIsland;
-                window.Closed+=()=>{windows.Remove(id);if(activeApp==id)activeApp="";UpdateIsland();};
+                window.Closed+=()=>{if(id=="browser")DisposeWebBrowser();windows.Remove(id);if(activeApp==id)activeApp="";UpdateIsland();};
                 windows.Add(id,window);windowLayer.Add(window);
                 switch(id){case "explorer":BuildExplorer(window.Content);break;case "notes":BuildNotes(window.Content);break;case "browser":BuildBrowser(window.Content);break;case "settings":BuildSettings(window.Content);break;}
             }

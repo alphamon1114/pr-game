@@ -90,6 +90,7 @@ namespace PrGame
                 if(!element.enabledInHierarchy)return DesktopCursorShape.Arrow;
                 if(element.ClassListContains("resize-edge") && int.TryParse(element.name.Substring(element.name.LastIndexOf('-')+1),out int edges))return ResizeShape(edges);
                 if(element is TextField field && !field.isReadOnly)return DesktopCursorShape.Text;
+                if(element is WebBrowserView web)return web.CursorShape;
                 if(element is Button || element is Toggle || element is DropdownField)return DesktopCursorShape.Link;
                 if(element.ClassListContains("titlebar"))return DesktopCursorShape.Move;
             }

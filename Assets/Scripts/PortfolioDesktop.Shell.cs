@@ -184,6 +184,7 @@ namespace PrGame
         {
             if(locked){if(evt.keyCode==KeyCode.Return || evt.keyCode==KeyCode.KeypadEnter){lockScreen.RemoveFromClassList("screen-off");Unlock();}evt.StopPropagation();return;}
             if(evt.keyCode==KeyCode.Escape){ClosePopups();CloseDialog();evt.StopPropagation();return;}
+            if(desktop.panel?.focusController?.focusedElement is WebBrowserView)return;
             if(evt.ctrlKey && evt.keyCode==KeyCode.Space){ShowSearch();evt.StopPropagation();return;}
             if(Shown(searchPanel))
             {

@@ -16,6 +16,7 @@ namespace PrGame.Editor
         static int step;
         static string createdId;
         static bool fileActivationVerified;
+        static bool webBrowserVerified;
         static string SaveDirectory => Path.GetFullPath("Logs/OSQA/State-"+SessionState.GetString("PrGame.OSRun","default"));
         static DesktopVerification()
         {
@@ -72,6 +73,12 @@ namespace PrGame.Editor
                         Capture(surface,"21-file-opened");
                         os.OpenApp("explorer");DesktopCursorVerification.PointAt(os,surface,new Vector2(1190,625));
                     }
+                    return;
+                }
+                if(step==28&&!webBrowserVerified)
+                {
+                    webBrowserVerified=WebBrowserVerification.Tick(os,surface,name=>Capture(surface,name));
+                    if(webBrowserVerified){os.OpenApp("explorer");DesktopCursorVerification.PointAt(os,surface,new Vector2(1190,625));}
                     return;
                 }
                 switch(step)
