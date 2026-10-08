@@ -110,6 +110,7 @@ box('Desk front apron',(-.20,.68,1.28),(1.77,.10,.045),black)
 for x in [-1.01,.61]:
  for z in [1.02,1.52]:rod('Desk steel leg',(x,.03,z),(x,.73,z),.024,black)
  box('Desk foot rail',(x,.08,1.27),(.044,.045,.56),black)
+# Import baseline only: DeskMousePad.cs replaces this at play time with the red XL mousepad.
 box('Desk mat',(-.14,.781,1.13),(1.08,.007,.42),matpad,.009)
 # Compact refrigerator in the northwest bay.
 box('Fridge body',(-1.70,.51,1.23),(.76,1.00,.69),ivory,.025)
@@ -150,7 +151,7 @@ for side,center in [('south',-1.30),('north',.26)]:
  for j in range(rows):
   for i in range(cols):k=j*(cols+1)+i;fs.append((k,k+1,k+cols+2,k+cols+1))
  o=mesh('Curtain '+side,vs,fs,curtain);m=o.modifiers.new('Curtain lining','SOLIDIFY');m.thickness=.002;bpy.context.view_layer.objects.active=o;bpy.ops.object.modifier_apply(modifier=m.name)
-# Southwest entry: slightly open inward; warm corridor remains mostly hidden.
+# Import baseline only: RoomDoor.cs rebuilds the hinge/handles and visible corridor at play time.
 for z in [-2.14,-1.12]:box('Door jamb',(-2.17,1.04,z),(.09,2.08,.055),ward)
 box('Door lintel',(-2.17,2.095,-1.63),(.09,.055,1.075),ward)
 door=box('Door leaf',(-2.06,1.025,-1.65),(.044,2.01,.97),ward,.009,yaw=11)

@@ -14,3 +14,18 @@ The following texture maps come from Poly Haven, under CC0:
 Maps are stored as albedo.jpg, normal.jpg (OpenGL), roughness.jpg and ao.jpg under Textures/<asset id>.
 Unity imports them at up to 1024 pixels, repeats UVs, and applies material-specific tint, normal strength and roughness.
 Fabric uses the normal/roughness/AO maps with a plain solid color instead of the plaid albedo.
+
+## Runtime furnishing revisions
+
+`Assets/Scripts/DeskMousePad.cs` replaces the old imported deskmat with an original procedural,
+rounded mouse-only pad: 490 x 420 x 4 mm, ruby fabric, a narrow stitched edge and simplified printed text.
+The visual/dimension reference is the Pulsar eS Saturn Pro Soft, Radiant Ruby, XL:
+https://www.pulsar.gg/products/es-saturn-pro-gaming-mousepad-soft
+XL was selected for this scene; the user requested the red model without specifying a size.
+No manufacturer product photograph, texture or CAD mesh is redistributed. The existing CC0 fabric
+maps are reused on a separate material so that the floor rug is not recolored.
+
+`Assets/Scripts/RoomDoor.cs` reuses the imported door panel and materials, attaches both handles to
+its rear hinge assembly, and adds a small visible corridor. These are play-time revisions;
+the Blender file and FBX remain the original import baseline. Do not rebuild the whole room merely
+to apply these changes. Restart Play to assemble the updated props.

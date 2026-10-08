@@ -70,6 +70,7 @@ namespace PrGame.Editor
                 if(step==-1)
                 {
                     RoomViewVerification.CheckFreeLook(surface);
+                    RoomPropVerification.Check(surface);
                     DesktopCursorVerification.CheckInactive(os);
                     RoomViewVerification.CheckRoom(surface);surface.seatedView.EnterComputer();
                     DesktopCursorVerification.CheckInactive(os);

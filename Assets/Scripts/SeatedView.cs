@@ -132,7 +132,7 @@ namespace PrGame
             {
                 // A recapture click only resumes looking; it must not also enter the computer.
                 if (lookReleased) { lookReleased = false; wasLooking = false; }
-                else if (monitor && monitor.IsPointerOverMonitor(new Vector2(Screen.width*.5f, Screen.height*.5f))) EnterComputer();
+                else if (!RoomDoor.TryInteract(view) && monitor && monitor.IsPointerOverMonitor(new Vector2(Screen.width*.5f, Screen.height*.5f))) EnterComputer();
             }
             if (appFocused && !typing && input.homePressed)
             {
@@ -206,7 +206,7 @@ namespace PrGame
             var style = new GUIStyle(GUI.skin.label) { font = helpFont, fontSize = Mathf.Max(12, Screen.height / 65), alignment = TextAnchor.MiddleCenter };
             string text = IsFocused ? "컴퓨터 조작 중     ·     ESC  방 둘러보기" :
                 !IsLooking ? "화면 클릭  둘러보기 재개     ·     F  컴퓨터 사용" :
-                "마우스로 둘러보기     ·     우클릭 누르기  확대     ·     모니터를 보고 클릭 / F  컴퓨터 사용     ·     ESC  마우스 해제";
+                "마우스로 둘러보기     ·     우클릭 누르기  확대     ·     문 / 모니터를 보고 클릭     ·     F  컴퓨터 사용     ·     ESC  마우스 해제";
             var rect = new Rect(0, Screen.height-36, Screen.width, 28);
             style.normal.textColor = new Color(0, 0, 0, .85f);
             GUI.Label(new Rect(rect.x+1, rect.y+1, rect.width, rect.height), text, style);

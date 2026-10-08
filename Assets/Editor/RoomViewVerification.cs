@@ -144,7 +144,7 @@ namespace PrGame.Editor
             File.WriteAllText("Logs/OSQA/room-results.txt","PASS: room starts outside computer mode; floor-plan landmarks and east/right window; supported PBR/contact-shadow shaders; physical approach; usable OS display fills 92% of limiting axis at 16:9, 4:3, 21:9 and 9:16; 84.64% viewport area at 16:9 (bezel/shields excluded); gated OS input; return to seat; typing focus released; note window preserved.\n");
             Debug.Log("PR_GAME_ROOM_VIEW_VERIFIED");
         }
-        static void Capture(Camera camera,string name)
+        internal static void Capture(Camera camera,string name)
         {
             var target=new RenderTexture(1600,900,24);var previous=camera.targetTexture;var active=RenderTexture.active;
             var texture=new Texture2D(1600,900,TextureFormat.RGB24,false);
